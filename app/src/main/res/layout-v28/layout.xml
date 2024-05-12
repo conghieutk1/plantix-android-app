@@ -8,35 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        android:padding="16dp"
-        android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Plantix"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/settings_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:src="@drawable/settings_fill0_wght400_grad0_opsz24" />
-    </LinearLayout>
-    <!-- Divider between header and content -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey02" />
 
     <!-- Content -->
     <androidx.fragment.app.FragmentContainerView
@@ -48,44 +20,7 @@
 
 
 
-    <!--    Line-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey02" />
-    <!-- Footer -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        android:padding="5dp"
-        android:layout_gravity="bottom"
-        android:gravity="center_vertical">
 
-        <Button
-            android:id="@+id/home_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Trang chủ"
-            android:textStyle="normal"
-            android:textColor="@android:color/black"
-            android:background="@android:color/transparent"
-            android:drawableBottom="@drawable/dashboard_fill0_wght400_grad0_opsz24"/>
-        <Button
-            android:id="@+id/user_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textStyle="normal"
-            android:background="@android:color/transparent"
-
-            android:text="Người dùng"
-            android:textColor="@android:color/black"
-            android:drawableBottom="@drawable/person_fill0_wght400_grad0_opsz24"/>
-
-    </LinearLayout>
 
 
 

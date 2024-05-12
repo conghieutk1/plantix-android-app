@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape>
+            <solid android:color="@android:color/white" /> <!-- Màu nền là màu trắng -->
+        </shape>
+    </item>
+    <item android:gravity="top"  >
+        <shape>
+            <size android:height="1dp" />
+            <solid android:color="@color/grey02" />
+        </shape>
+    </item>
+</layer-list>

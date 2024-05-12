@@ -1,15 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/user_page_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context=".UserFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="User" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        android:background="@drawable/border_nav"
+        android:padding="16dp"
+        android:layout_gravity="top"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Plantix"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/settings_fill0_wght400_grad0_opsz24" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="79dp"
+        android:background="@color/white"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="User" />
+        </LinearLayout>
+    </ScrollView>
+
+
+
+    <!-- Footer -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/border_top"
+        android:padding="5dp"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/home_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Trang chủ"
+            android:textStyle="normal"
+            android:textColor="@android:color/black"
+            android:background="@android:color/transparent"
+            android:drawableBottom="@drawable/dashboard_fill0_wght400_grad0_opsz24"/>
+        <Button
+            android:id="@+id/user_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="normal"
+            android:background="@drawable/border_button_nav"
+            app:backgroundTint="@null"
+            android:text="Người dùng"
+
+            android:textColor="@android:color/black"
+            android:drawableBottom="@drawable/person_fill0_wght400_grad0_opsz24"/>
+
+    </LinearLayout>
 
 </FrameLayout>

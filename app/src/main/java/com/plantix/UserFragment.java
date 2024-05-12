@@ -3,10 +3,18 @@ package com.plantix;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +45,9 @@ public class UserFragment extends Fragment {
      * @return A new instance of fragment UserFragment.
      */
     // TODO: Rename and change types and number of parameters
+
+    public static final String TAG = UserFragment.class.getName();
+    private PredictionViewModel viewModel;
     public static UserFragment newInstance(String param1, String param2) {
         UserFragment fragment = new UserFragment();
         Bundle args = new Bundle();
@@ -53,12 +64,46 @@ public class UserFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        viewModel = new ViewModelProvider(requireActivity()).get(PredictionViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user, container, false);
+
+        Button btnHomePage = view.findViewById(R.id.home_button);
+        btnHomePage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, HomeFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(HomeFragment.TAG) // Name can be null
+                        .commit();
+            }
+        });
+
+        // Button open setting page
+        ImageButton btnSettingPage = view.findViewById(R.id.settings_button);
+        btnSettingPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(getActivity(), "Cài đặt", Toast.LENGTH_LONG).show();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, SettingFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(SettingFragment.TAG) // Name can be null
+                        .commit();
+            }
+        });
+
+
+
+
+        return view;
     }
 }

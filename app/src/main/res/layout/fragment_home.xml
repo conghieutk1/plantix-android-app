@@ -8,12 +8,15 @@
     tools:context=".HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/white"
+        android:background="@drawable/border_nav"
         android:padding="16dp"
+        android:layout_gravity="top"
         android:gravity="center_vertical">
 
         <TextView
@@ -32,16 +35,11 @@
             android:background="@android:color/transparent"
             android:src="@drawable/settings_fill0_wght400_grad0_opsz24" />
     </LinearLayout>
-    <!-- Divider between header and content -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey02" />
-    <!-- Content -->
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_weight="1"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="79dp"
         android:background="@color/white"
         android:layout_height="match_parent">
 
@@ -234,7 +232,6 @@
                     android:layout_weight="6"
                     android:backgroundTint="@color/white"
                     android:textColor="@color/black"
-                    android:onClick="openGallery"
                     android:text="Xem tất cả" />
 
             </LinearLayout>
@@ -254,7 +251,6 @@
             </LinearLayout>
 
 
-
             <Button
                 android:id="@+id/buttonPrediction"
                 android:layout_width="match_parent"
@@ -266,9 +262,45 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/white"
                 android:text="Xác nhận" />
+
         </LinearLayout>
     </ScrollView>
 
+
+
+    <!-- Footer -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/border_top"
+        android:padding="5dp"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/home_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Trang chủ"
+            android:textStyle="normal"
+            android:textColor="@android:color/black"
+            android:background="@drawable/border_button_nav"
+            app:backgroundTint="@null"
+            android:drawableBottom="@drawable/dashboard_fill0_wght400_grad0_opsz24"/>
+        <Button
+            android:id="@+id/user_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="normal"
+            android:background="@android:color/transparent"
+            android:text="Người dùng"
+            android:textColor="@android:color/black"
+            android:drawableBottom="@drawable/person_fill0_wght400_grad0_opsz24"/>
+
+    </LinearLayout>
 
 
 </FrameLayout>
