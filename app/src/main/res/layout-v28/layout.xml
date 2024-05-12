@@ -30,7 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:onClick="settingButton"
             android:src="@drawable/settings_fill0_wght400_grad0_opsz24" />
     </LinearLayout>
     <!-- Divider between header and content -->
@@ -38,253 +37,30 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey02" />
+
     <!-- Content -->
-
-    <ScrollView
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.plantix.HomeFragment"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:background="@color/white"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/buttonViewAllDiseases"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:backgroundTint="@color/color_button1"
-                    android:textColor="@color/white"
-                    android:text="Sâu hại và bệnh cây" />
-
-                <Button
-                    android:id="@+id/buttonTrickPlantation"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:backgroundTint="@color/color_button1"
-                    android:textColor="@color/white"
-                    android:text="Mẹo canh tác" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="Chữa cho cây trồng" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:background="@drawable/background_component">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:paddingLeft="40dp"
-                        android:paddingRight="40dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <ImageView
-                            android:id="@+id/imageViewPlant"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:scaleType="centerInside"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/psychiatry_fill0_wght400_grad0_opsz24"
-                            />
-                        <ImageView
-                            android:id="@+id/imageViewArrow1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/arrow_forward_ios_fill0_wght400_grad0_opsz24" />
-
-                        <ImageView
-
-                            android:id="@+id/imageViewPhone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/smartphone_fill0_wght400_grad0_opsz24" />
-                        <ImageView
-                            android:id="@+id/imageViewArrow2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/arrow_forward_ios_fill0_wght400_grad0_opsz24" />
-                        <ImageView
-                            android:id="@+id/imageViewMedicine"
-                            android:layout_width="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/sanitizer_fill0_wght400_grad0_opsz24" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="35dp"
-                        android:paddingRight="35dp"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="15dp"
-
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Chụp ảnh"
-                            android:textColor="@color/black"
-                            android:gravity="center"
-                            android:layout_weight="1"
-                            android:textSize="13sp"
-
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Xem chuẩn đoán"
-                            android:textColor="@color/black"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:textSize="13sp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Lấy thuốc"
-                            android:textColor="@color/black"
-                            android:layout_weight="1"
-                            android:textSize="13sp"
-                            android:gravity="center"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        android:orientation="horizontal">
-                        <Button
-                            android:id="@+id/btnOpenCamera"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/color_button1"
-                            android:layout_weight="1"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="10dp"
-                            android:textColor="@color/white"
-                            android:text="Chụp ảnh" />
-                        <Button
-                            android:id="@+id/btnSelectImage"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="20dp"
-                            android:backgroundTint="@color/color_button1"
-                            android:textColor="@color/white"
-                            android:text="Tải ảnh lên" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
 
 
 
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:text="Các chuẩn đoán của bạn"/>
-
-                <Button
-                    android:id="@+id/buttonViewAllDiagnostic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="6"
-                    android:backgroundTint="@color/white"
-                    android:textColor="@color/black"
-                    android:onClick="openGallery"
-                    android:text="Xem tất cả" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="20dp"
-                    android:background="@drawable/border"
-                    />
-            </LinearLayout>
-
-
-
-            <Button
-                android:id="@+id/buttonPrediction"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/color_button1"
-                android:layout_weight="1"
-                android:layout_marginLeft="100dp"
-                android:layout_marginRight="100dp"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/white"
-                android:text="Xác nhận" />
-        </LinearLayout>
-    </ScrollView>
-
-
-
-
-<!--    Line-->
+    <!--    Line-->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey02" />
     <!-- Footer -->
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/white"
         android:padding="5dp"
+        android:layout_gravity="bottom"
         android:gravity="center_vertical">
 
         <Button
@@ -304,11 +80,14 @@
             android:layout_weight="1"
             android:textStyle="normal"
             android:background="@android:color/transparent"
-            android:onClick="personInforButton"
+
             android:text="Người dùng"
             android:textColor="@android:color/black"
             android:drawableBottom="@drawable/person_fill0_wght400_grad0_opsz24"/>
 
     </LinearLayout>
+
+
+
 
 </LinearLayout>

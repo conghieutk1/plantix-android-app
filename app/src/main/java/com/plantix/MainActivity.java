@@ -1,5 +1,6 @@
 package com.plantix;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -7,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -18,6 +21,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -35,6 +40,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -69,127 +76,110 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.layout);
         applyWindowInsets(findViewById(R.id.main));
 
-        Button btnCapture = (Button) findViewById(R.id.btnOpenCamera);
-        Button btnSelectImage = (Button) findViewById(R.id.btnSelectImage);
-        Button buttonPrediction = findViewById(R.id.buttonPrediction);
-        imgCapture = (ImageView) findViewById(R.id.imageView1);
+//        Button btnCapture = (Button) findViewById(R.id.btnOpenCamera);
+//        Button btnSelectImage = (Button) findViewById(R.id.btnSelectImage);
+//        Button buttonPrediction = findViewById(R.id.buttonPrediction);
+        Button btnHomePage = findViewById(R.id.home_button);
+        Button btnUserPage = findViewById(R.id.user_button);
+//        imgCapture = (ImageView) findViewById(R.id.imageView1);
 
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                Intent data = result.getData();
-                if (data != null) {
-                    // Kiểm tra xem kết quả từ ACTION_IMAGE_CAPTURE hay ACTION_PICK
-                    Uri selectedImageUri = data.getData();
-                    if (selectedImageUri != null) {
-                        // Xử lý khi chọn ảnh từ thư viện
-                        imgCapture.setImageURI(selectedImageUri);
-                    } else {
-                        // Xử lý khi chụp ảnh từ camera
-                        Bundle extras = data.getExtras();
-                        if (extras != null && extras.containsKey("data")) {
-                            Bitmap imageBitmap = (Bitmap) extras.get("data");
-                            // Xử lý ảnh đã chụp từ camera
-                            imgCapture.setImageBitmap(imageBitmap);
-                        }
-                    }
-                }
-            } else {
-                // Xử lý trường hợp Intent không thành công hoặc bị hủy bỏ
-                Toast.makeText(this, "Chụp ảnh thất bại", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+//            if (result.getResultCode() == Activity.RESULT_OK) {
+//                Intent data = result.getData();
+//                if (data != null) {
+//                    // Kiểm tra xem kết quả từ ACTION_IMAGE_CAPTURE hay ACTION_PICK
+//                    Uri selectedImageUri = data.getData();
+//                    if (selectedImageUri != null) {
+//                        // Xử lý khi chọn ảnh từ thư viện
+//                        imgCapture.setImageURI(selectedImageUri);
+//                    } else {
+//                        // Xử lý khi chụp ảnh từ camera
+//                        Bundle extras = data.getExtras();
+//                        if (extras != null && extras.containsKey("data")) {
+//                            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//                            // Xử lý ảnh đã chụp từ camera
+//                            imgCapture.setImageBitmap(imageBitmap);
+//                        }
+//                    }
+//                }
+//            } else {
+//                // Xử lý trường hợp Intent không thành công hoặc bị hủy bỏ
+//                Toast.makeText(this, "Chụp ảnh thất bại", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
-        btnCapture.setOnClickListener(v -> {
-            Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            activityResultLauncher.launch(cInt);
-        });
-
-        btnSelectImage.setOnClickListener(v -> {
-            Intent cInt = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            activityResultLauncher.launch(cInt);
-        });
-        
-        buttonPrediction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Lấy string
-
-
-                // Instantiate the RequestQueue.
-//                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-//                String url = "https://dummy.restapiexample.com/api/v1/employees";
+//        btnCapture.setOnClickListener(v -> {
+//            Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            activityResultLauncher.launch(cInt);
+//        });
 //
-//                // Request a string response from the provided URL.
-//                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                        new Response.Listener<String>() {
+//        btnSelectImage.setOnClickListener(v -> {
+//            Intent cInt = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//            activityResultLauncher.launch(cInt);
+//        });
+//
+//        buttonPrediction.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Assuming imageView is your ImageView where you set the image
+//                Bitmap bitmap = ((BitmapDrawable)imgCapture.getDrawable()).getBitmap();
+////                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+////                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+////                byte[] imageBytes = byteArrayOutputStream.toByteArray();
+////                String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+//
+//                String base64String = ImageUtil.convert(bitmap);
+//
+//                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+//                String url = "https://be6f-1-52-8-187.ngrok-free.app/api/predict-from-android";
+//                JSONObject jsonObject = new JSONObject();
+//
+//                try {
+//                    jsonObject.put("base64FromAndroid", base64String);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+//                        new Response.Listener<JSONObject>() {
 //                            @Override
-//                            public void onResponse(String response) {
-//                                // Display the first 500 characters of the response string.
-//                                Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+//                            public void onResponse(JSONObject response) {
+//                                // Handle the response from the server
+//                                Toast.makeText(MainActivity.this, response.toString(), Toast.LENGTH_LONG).show();
 //                            }
 //                        }, new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                                Toast.makeText(MainActivity.this, "Error occured", Toast.LENGTH_LONG).show();
-//                            }
-//                        });
-//
-//                // Add the request to the RequestQueue.
-//                queue.add(stringRequest);
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        // Handle errors
+//                        Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//                queue.add(request);
+//            }
+//        });
 
-                // Lấy json
-//                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-                String url = "https://dummy.restapiexample.com/api/v1/employees";
-
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    JSONArray employees = response.getJSONArray("data");
-                                    // Loop through each employee object in the array
-                                    for (int i = 0; i < employees.length(); i++) {
-                                        JSONObject employee = employees.getJSONObject(i);
-                                        int id = employee.getInt("id");
-                                        String employeeName = employee.getString("employee_name");
-                                        int employeeSalary = employee.getInt("employee_salary");
-                                        int employeeAge = employee.getInt("employee_age");
-                                        // Process or display the employee data as needed
-                                        String employeeDetails = "ID: " + id + "\nName: " + employeeName + "\nSalary: " + employeeSalary + "\nAge: " + employeeAge;
-                                        Toast.makeText(MainActivity.this, employeeDetails, Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                    // Handle JSON parsing error
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // TODO: Handle error
-                                Toast.makeText(MainActivity.this, "Error occured", Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                        // Access the RequestQueue through your singleton class.
-//                        queue.add(jsonObjectRequest);
-
-                MySingleton.getInstance(MainActivity.this).addToRequestQueue(jsonObjectRequest);
+        btnHomePage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, HomeFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("name") // Name can be null
+                        .commit();
             }
         });
 
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Image_Capture_Code) {
-            if (resultCode == RESULT_OK) {
-                Bitmap bp = (Bitmap) data.getExtras().get("data");
-                imgCapture.setImageBitmap(bp);
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+        btnUserPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, UserFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("name") // Name can be null
+                        .commit();
             }
-        }
+        });
     }
 
     private void applyWindowInsets(View view) {
