@@ -36,67 +36,191 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="56dp"
-        android:padding="20dp"
         android:background="@color/background_component"
+        android:layout_marginTop="56dp"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_component1"
-            android:padding="10dp"
-            android:orientation="vertical">
-            <TextView
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="@color/background_component"
+            android:layout_height="match_parent">
 
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_component1"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/border_nav"
+                        android:text="Kết quả dự đoán" />
+
+                    <!-- table_layout.xml -->
+                    <TableLayout
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/tableLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stretchColumns="*"
+                        android:padding="10dp"
+                        android:background="@android:color/white"
+                        android:divider="@drawable/divider"
+                        android:showDividers="middle">
+
+                        <!--                &lt;!&ndash; Hàng 1 &ndash;&gt;-->
+                        <!--                <TableRow>-->
+                        <!--                    <include layout="@layout/table_cell_layout"  />-->
+                        <!--                    <include layout="@layout/table_cell_layout" />-->
+                        <!--                    <include layout="@layout/table_cell_layout" />-->
+                        <!--                    <include layout="@layout/table_cell_layout" />-->
+                        <!--                </TableRow>-->
+
+                        <!--                &lt;!&ndash; Hàng 2 &ndash;&gt;-->
+                        <!--                <TableRow>-->
+                        <!--                    <include layout="@layout/table_cell_layout" />-->
+                        <!--                    <include layout="@layout/table_cell_layout" />-->
+                        <!--                    <include layout="@layout/table_cell_layout" />-->
+                        <!--                    <include layout="@layout/table_cell_layout" />-->
+                        <!--                </TableRow>-->
+
+                        <!-- Hàng 3 -->
+                        <!-- Thêm các hàng khác nếu cần -->
+
+                    </TableLayout>
+
+
+                </LinearLayout>
+
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:text="Kết quả dự đoán" />
-
-            <!-- table_layout.xml -->
-            <TableLayout
+                android:layout_marginTop="20dp"
+                android:paddingLeft="10dp"
+                android:paddingBottom="5dp"
+                android:text="Mẫu bệnh" />
+            <androidx.cardview.widget.CardView
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/tableLayout"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/bottom_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:stretchColumns="*"
+                app:cardCornerRadius="15dp">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+
+                    android:layout_height="350dp"/>
+            </androidx.cardview.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:padding="10dp"
-                android:background="@android:color/white"
-                android:divider="@drawable/divider"
-                android:showDividers="middle">
+                android:background="@drawable/background_component1"
+                android:orientation="vertical">
 
-                <!-- Hàng 1 -->
-                <TableRow>
-                    <include layout="@layout/table_cell_layout"  />
-                    <include layout="@layout/table_cell_layout" />
-                    <include layout="@layout/table_cell_layout" />
-                    <include layout="@layout/table_cell_layout" />
-                </TableRow>
+                <TextView
+                    android:id="@+id/textViewImageName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="5dp"
+                    android:text="Bệnh sương mai" />
 
-                <!-- Hàng 2 -->
-                <TableRow>
-                    <include layout="@layout/table_cell_layout" />
-                    <include layout="@layout/table_cell_layout" />
-                    <include layout="@layout/table_cell_layout" />
-                    <include layout="@layout/table_cell_layout" />
-                </TableRow>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/imageViewPlant"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"
+                        app:srcCompat="@drawable/book_4_24dp_fill0_wght400_grad0_opsz24"
+                        />
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:padding="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_weight="7"
+                        android:text="Triệu chứng" />
+                </LinearLayout>
 
-                <!-- Hàng 3 -->
-                <!-- Thêm các hàng khác nếu cần -->
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/textViewSymtom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:paddingBottom="5dp"
+                    android:text="Không có dữ liệu" />
 
-            </TableLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/imageMoreInformation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"
+                        app:srcCompat="@drawable/menu_book_24dp_fill0_wght400_grad0_opsz24"
+                        />
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:padding="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_weight="7"
+                        android:text="Thêm thông tin" />
+                </LinearLayout>
 
-
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/textViewMoreInformation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:paddingBottom="5dp"
+                    android:text="Không có dữ liệu" />
+            </LinearLayout>
 
         </LinearLayout>
 
+
+
     </ScrollView>
-
-
-
 
 
 

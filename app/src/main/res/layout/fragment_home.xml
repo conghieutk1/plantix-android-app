@@ -44,6 +44,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -64,17 +65,19 @@
                     android:textColor="@color/white"
                     android:text="Sâu hại và bệnh cây" />
 
+
                 <Button
-                    android:id="@+id/buttonTrickPlantation"
+                    android:id="@+id/buttonOpenViewP"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="@color/color_button1"
                     android:textColor="@color/white"
-                    android:text="Mẹo canh tác" />
+                    android:text="Mở xem chuẩn đoán gần nhất" />
             </LinearLayout>
 
             <TextView
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -86,7 +89,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:background="@drawable/background_component">
 
@@ -211,6 +213,54 @@
 
 
             </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/componentViewSelectedImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="Mẫu ảnh của bạn"/>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="20dp"
+                        android:background="@drawable/border"
+                        />
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+            <Button
+                android:id="@+id/buttonPrediction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/color_button1"
+                android:layout_weight="1"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:text="Xem dự đoán" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -235,35 +285,143 @@
                     android:text="Xem tất cả" />
 
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="20dp"
-                    android:background="@drawable/border"
-                    />
 
+            <LinearLayout
+                android:id="@+id/mainHistoryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/messageWhileDontHaveData"
+                    android:layout_width="match_parent"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:text="Không có dữ liệu"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <LinearLayout
+                    android:id="@+id/componentHistory1"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@drawable/border_nav"
+                    android:padding="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <androidx.cardview.widget.CardView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        app:cardCornerRadius="15dp">
+
+                        <ImageView
+                            android:id="@+id/imageViewHistory1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:padding="10dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/textDateTime1"
+                            android:layout_width="match_parent"
+                            android:textSize="13sp"
+                            android:textColor="@color/black"
+                            android:text="Ngày 19/05/2024"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/textDiseaseName1"
+                            android:layout_width="match_parent"
+                            android:text="Bệnh héo muộn"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:maxWidth="0dp"
+
+                            android:layout_height="wrap_content">
+                        </TextView>
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/arrow_forward_ios_fill0_wght400_grad0_opsz24" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/componentHistory2"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@drawable/border_nav"
+                    android:padding="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <androidx.cardview.widget.CardView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        app:cardCornerRadius="15dp">
+
+                        <ImageView
+                            android:id="@+id/imageViewHistory2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:padding="10dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/textDateTime2"
+                            android:layout_width="match_parent"
+                            android:textSize="13sp"
+                            android:textColor="@color/black"
+                            android:text="Ngày 19/05/2024"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/textDiseaseName2"
+                            android:layout_width="match_parent"
+                            android:text="Bệnh héo muộn"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:maxWidth="0dp"
+
+                            android:layout_height="wrap_content">
+                        </TextView>
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/arrow_forward_ios_fill0_wght400_grad0_opsz24" />
+                </LinearLayout>
 
             </LinearLayout>
 
 
-            <Button
-                android:id="@+id/buttonPrediction"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/color_button1"
-                android:layout_weight="1"
-                android:layout_marginLeft="100dp"
-                android:layout_marginRight="100dp"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/white"
-                android:text="Xác nhận" />
-
         </LinearLayout>
+
     </ScrollView>
 
 

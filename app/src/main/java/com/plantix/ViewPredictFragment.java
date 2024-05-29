@@ -1,12 +1,14 @@
 package com.plantix;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
+
+import io.noties.markwon.Markwon;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,6 +74,7 @@ public class ViewPredictFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(PredictionViewModel.class);
+
     }
 
     @Override
@@ -76,6 +82,17 @@ public class ViewPredictFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_predict, container, false);
+
+//        ViewPager2 viewPager = view.findViewById(R.id.viewPager);
+//
+//        List<String> imageUrls = new ArrayList<>();
+//        imageUrls.add("https://plantix-image-pool.s3.ap-southeast-1.amazonaws.com/uploads/1/1716868299437");
+//        imageUrls.add("https://plantix-image-pool.s3.ap-southeast-1.amazonaws.com/uploads/1/1716868299444");
+//        imageUrls.add("https://plantix-image-pool.s3.ap-southeast-1.amazonaws.com/uploads/1/1716868299452");
+//        imageUrls.add("https://plantix-image-pool.s3.ap-southeast-1.amazonaws.com/uploads/1/1716868299459");
+//
+//        SlideshowAdapter adapter = new SlideshowAdapter(getActivity(), imageUrls);
+//        viewPager.setAdapter(adapter);
 
         ImageButton btnReturnHome = view.findViewById(R.id.return_button);
         btnReturnHome.setOnClickListener(new View.OnClickListener() {
@@ -85,50 +102,38 @@ public class ViewPredictFragment extends Fragment {
             }
         });
 
-        // Gán layout cho TableRow và tìm TextView trong mỗi ô
-//        TableLayout tableLayout = view.findViewById(R.id.tableLayout);
-//        for (int i = 0; i < tableLayout.getChildCount(); i++) {
-//            View childView = tableLayout.getChildAt(i);
-//            if (childView instanceof TableRow) {
-//                TableRow row = (TableRow) childView;
-//                for (int j = 0; j < row.getChildCount(); j++) {
-//                    View cellView = row.getChildAt(j);
-//                    if (cellView instanceof FrameLayout) {
-//                        FrameLayout frameLayout = (FrameLayout) cellView;
-//                        TextView textView = frameLayout.findViewById(R.id.cellTextView);
-//                        textView.setText("Dữ liệu"); // Đặt văn bản vào TextView
-//                    }
-//                }
-//            }
-//        }
-
         TableLayout tableLayout = view.findViewById(R.id.tableLayout);
+
+//        Toast.makeText(getActivity(), "Khong co du lieu", Toast.LENGTH_LONG).show();
+        tableLayout.removeAllViews();
+
+
+        TableRow headerRow = createHeaderRow();
+        setTextViewColor(headerRow, Color.BLACK);
+        // Thêm hàng tiêu đề vào bảng
+        tableLayout.addView(headerRow);
+
+        TableRow row = new TableRow(requireContext());
+        TextView notiTextView = createTextView(String.valueOf("Không có dữ liệu"));
+        row.addView(notiTextView);
+        tableLayout.addView(row);
+
+
         // Quan sát LiveData từ ViewModel
         viewModel.getPredictions().observe(getViewLifecycleOwner(), new Observer<List<Prediction>>() {
             @Override
             public void onChanged(List<Prediction> predictions) {
-//                // Xử lý dữ liệu đã thay đổi từ ViewModel
-//                if (predictions != null && !predictions.isEmpty()) {
-//                    // Lấy dữ liệu từ danh sách dự đoán và cập nhật giao diện người dùng
-//                    // Ví dụ: hiển thị dữ liệu trong RecyclerView, ListView, hoặc làm gì đó khác với dữ liệu
-//                    // Lặp qua danh sách dự đoán và in ra màn hình với Toast
-//                    for (Prediction prediction : predictions) {
-//                        String message = "Id: " + prediction.getId() + ", Name: " + prediction.getName() + ", Probability: " + prediction.getProb();
-//                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    // Nếu danh sách dự đoán rỗng, in ra màn hình với Toast
-//                    Toast.makeText(requireContext(), "Không có dữ liệu dự đoán", Toast.LENGTH_SHORT).show();
-//                }
-
-                if (predictions != null && !predictions.isEmpty()) {
+//                Toast.makeText(getActivity(), "predictions", Toast.LENGTH_LONG).show();
+                if (predictions != null && !predictions.isEmpty()) { // && !predictions.isEmpty()
                     // Xóa tất cả các hàng cũ trong bảng (nếu có)
                     tableLayout.removeAllViews();
+
                     TableRow headerRow = createHeaderRow();
-                    // Thiết lập màu chữ của tiêu đề thành màu đen
                     setTextViewColor(headerRow, Color.BLACK);
                     // Thêm hàng tiêu đề vào bảng
                     tableLayout.addView(headerRow);
+
+
                     // Tạo hàng và cột cho mỗi mục dự đoán
                     int i = 1;
                     for (Prediction prediction : predictions) {
@@ -161,22 +166,60 @@ public class ViewPredictFragment extends Fragment {
             }
         });
 
+        viewModel.getHighestProbDisease().observe(getViewLifecycleOwner(), new Observer<DiseaseData>() {
+            @Override
+            public void onChanged(DiseaseData highestProbDisease) {
+//                Toast.makeText(getActivity(), "highestProbDisease", Toast.LENGTH_LONG).show();
+                // Update UI with highestProbDisease
+                if (highestProbDisease != null) {
+                    // Example: Display the highest probability disease details
+                    TextView symtomTextView = view.findViewById(R.id.textViewSymtom);
+                    String symtomMarkdown = highestProbDisease.getSymtomMarkdown();
+                    Markwon markdown1 = Markwon.create(requireActivity());
+                    markdown1.setMarkdown(symtomTextView, symtomMarkdown);
+
+                    TextView descriptionTextView = view.findViewById(R.id.textViewMoreInformation);
+                    String descriptionMarkdown = highestProbDisease.getDescriptionMarkdown();
+                    Markwon markdown2 = Markwon.create(requireActivity());
+                    markdown2.setMarkdown(descriptionTextView, descriptionMarkdown);
+
+
+
+                }
+                if (highestProbDisease.getImageUrls() != null) {
+                    ViewPager2 viewPager = view.findViewById(R.id.viewPager);
+
+                    List<String> imageUrls = highestProbDisease.getImageUrls();
+
+                    SlideshowAdapter adapter = new SlideshowAdapter(getActivity(), imageUrls);
+                    viewPager.setAdapter(adapter);
+                }
+            }
+        });
+//        TextView textView = view.findViewById(R.id.textViewSymtom);
+//
+//        String markdown = "- Chelsea\n" +
+//                "- The Blue";
+//
+//        Markwon markwon = Markwon.create(requireActivity());
+//        markwon.setMarkdown(textView, markdown);
+
 
         return view;
     }
     private TableRow createHeaderRow() {
         TableRow row = new TableRow(requireContext());
 
-        TextView noHeader = createTextView("STT");
+        TextView noHeader = createTextViewForHeader("STT");
         row.addView(noHeader);
 
 //        TextView idHeader = createTextView("ID");
 //        row.addView(idHeader);
 
-        TextView nameHeader = createTextView("Tên bệnh");
+        TextView nameHeader = createTextViewForHeader("Tên bệnh");
         row.addView(nameHeader);
 
-        TextView probHeader = createTextView("Xác suất dự đoán");
+        TextView probHeader = createTextViewForHeader("Xác suất dự đoán");
         row.addView(probHeader);
 
         return row;
@@ -184,6 +227,13 @@ public class ViewPredictFragment extends Fragment {
     private TextView createTextView(String text) {
         TextView textView = new TextView(requireContext());
         textView.setText(text);
+        textView.setPadding(10, 10, 10, 10);
+        return textView;
+    }
+    private TextView createTextViewForHeader(String text) {
+        TextView textView = new TextView(requireContext());
+        textView.setText(text);
+        textView.setTypeface(null, Typeface.BOLD);
         textView.setPadding(10, 10, 10, 10);
         return textView;
     }

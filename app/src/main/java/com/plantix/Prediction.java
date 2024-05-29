@@ -3,14 +3,12 @@ package com.plantix;
 public class Prediction {
     private int id;
     private String name;
-
+    private double prob;
     public Prediction(int id, String name, double prob) {
         this.id = id;
         this.name = name;
         this.prob = prob;
     }
-
-    private double prob;
 
     // Các phương thức getter và setter
     public int getId() {
