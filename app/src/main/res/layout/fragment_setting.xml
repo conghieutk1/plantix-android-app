@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SettingFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/user_page_fragment"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".UserFragment">
+
+ <!-- TODO: Update blank fragment layout -->
  <LinearLayout
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
      android:orientation="horizontal"
+
      android:background="@drawable/border_nav"
      android:padding="16dp"
      android:layout_gravity="top"
      android:gravity="center_vertical">
+
   <ImageButton
       android:id="@+id/return_button"
       android:layout_width="wrap_content"
@@ -30,8 +36,6 @@
       android:paddingLeft="10dp"
       android:textStyle="bold" />
  </LinearLayout>
- <!-- TODO: Update blank fragment layout -->
-
 
  <ScrollView
      android:layout_width="match_parent"
@@ -41,32 +45,241 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="vertical">
-
-   <!-- Nội dung cuộn -->
-   <TextView
+      android:layout_weight="1"
+      android:background="@color/white"
+      android:orientation="vertical"
+      >
+   <LinearLayout
        android:layout_width="match_parent"
-       android:layout_height="200dp"
-       android:text="Line 1" />
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:orientation="vertical"
+       android:layout_marginTop="16dp"
+       android:paddingRight="16dp"
+       android:paddingLeft="16dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tổng quát"
+        android:textColor="@color/black"
+        android:gravity="left"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingBottom="10dp"
+        android:background="@drawable/border_nav"
+        android:orientation="vertical"
+        >
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Chọn ngôn ngữ Plantix của bạn"
+         android:textColor="@color/grey03"
+         android:gravity="left"
+         android:textSize="13sp"
+         android:layout_marginBottom="8dp"
+         />
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Tiếng việt"
+         android:textColor="@color/black"
+         android:gravity="left"
+         android:textSize="14sp"
+         />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        android:orientation="vertical"
+        >
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Chọn quốc gia"
+         android:textColor="@color/grey03"
+         android:gravity="left"
+         android:textSize="13sp"
+         android:layout_marginBottom="8dp"
+         />
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Việt Nam"
+         android:textColor="@color/black"
+         android:gravity="left"
+         android:textSize="14sp"
+         />
+    </LinearLayout>
 
-   <TextView
-       android:layout_width="match_parent"
-       android:layout_height="200dp"
-       android:text="Line 2" />
-   <TextView
-       android:layout_width="match_parent"
-       android:layout_height="200dp"
-       android:text="Line 3" />
 
-   <TextView
-       android:layout_width="match_parent"
-       android:layout_height="200dp"
-       android:text="Line 4" />
 
-   <!-- Thêm các phần tử khác mà bạn muốn cuộn -->
+   </LinearLayout>
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:orientation="vertical"
+       android:paddingRight="16dp"
+       android:paddingLeft="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thông báo"
+        android:textColor="@color/black"
+        android:gravity="left"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingBottom="10dp"
+        android:background="@drawable/border_nav"
+        android:orientation="vertical"
+        >
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Thông tin về cây trồng của tôi"
+         android:textColor="@color/grey03"
+         android:gravity="left"
+         android:textSize="13sp"
+         android:layout_marginBottom="8dp"
+         />
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Nhận thông báo đẩy"
+         android:textColor="@color/black"
+         android:gravity="left"
+         android:textSize="14sp"
+         />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        android:orientation="vertical"
+        >
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Thông tin về phiên bản cập nhật mới"
+         android:textColor="@color/grey03"
+         android:gravity="left"
+         android:textSize="13sp"
+         android:layout_marginBottom="8dp"
+         />
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Nhận thông báo đẩy"
+         android:textColor="@color/black"
+         android:gravity="left"
+         android:textSize="14sp"
+         />
+    </LinearLayout>
+   </LinearLayout>
+
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:orientation="vertical"
+       android:paddingRight="16dp"
+       android:paddingLeft="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Khác"
+        android:textColor="@color/black"
+        android:gravity="left"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingBottom="10dp"
+        android:background="@drawable/border_nav"
+        android:orientation="vertical"
+        >
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Giấy phép nguồn mở"
+         android:textColor="@color/grey03"
+         android:gravity="left"
+         android:textSize="13sp"
+         android:layout_marginBottom="8dp"
+         />
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Danh sách giấy phép nguồn mở được ứng dụng"
+         android:textColor="@color/black"
+         android:gravity="left"
+         android:textSize="14sp"
+         />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        android:orientation="vertical"
+        >
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Ứng dụng"
+         android:textColor="@color/grey03"
+         android:gravity="left"
+         android:textSize="13sp"
+         android:layout_marginBottom="8dp"
+         />
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Version: 1.0.0"
+         android:textColor="@color/black"
+         android:gravity="left"
+         android:textSize="14sp"
+         />
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="Author: Hiếu Đặng"
+         android:textColor="@color/black"
+         android:gravity="left"
+         android:textSize="14sp"
+         />
+    </LinearLayout>
+   </LinearLayout>
 
   </LinearLayout>
  </ScrollView>
+
 
 
 

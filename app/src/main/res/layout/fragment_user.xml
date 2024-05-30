@@ -43,19 +43,208 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="16dp">
-            <TextView
-                android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="User" />
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:background="@drawable/border_nav"
+                android:orientation="horizontal"
+                android:padding="16dp">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:cardCornerRadius="15dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:src="@drawable/user_avatar"/>
+                </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:paddingLeft="20dp"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tài khoản của bạn"
+                        android:textColor="@color/black"
+                        android:gravity="left"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="10dp"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tham gia cộng đồng Plantix"
+                        android:textColor="@color/black"
+                        android:gravity="left"
+                        android:textSize="13sp"
+                        android:layout_marginBottom="10dp"
+                        />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:backgroundTint="@null"
+                        android:background="@drawable/border_radius"
+                        android:textColor="@color/main_color"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="Đăng nhập" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2.2"
+                app:cardCornerRadius="15dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="0dp"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_nav"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/logo"
+                        />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Cùng nhau gieo trồng thông minh!"
+                            android:textColor="@color/black"
+                            android:gravity="left"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            />
+                        <TextView
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Chia sẻ Plantix và giúp nông dân giải quyết các vấn đề về cây trồng của họ."
+                            android:textColor="@color/black"
+                            android:gravity="left"
+                            android:textSize="13sp"
+                            />
+
+                        <Button
+                            android:id="@+id/buttonSharePlantix"
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:layout_gravity="right"
+                            android:backgroundTint="@color/white"
+                            android:gravity="right"
+                            android:text="Chia sẻ Plantix"
+                            android:textColor="@color/main_color"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2.2"
+                app:cardCornerRadius="15dp"
+                android:layout_margin="16dp"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_nav"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/customer_support"
+                         />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Trải nghiệm của bạn với ứng dụng Plantix là gì?"
+                            android:textColor="@color/black"
+                            android:gravity="left"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Chúng tôi rất muốn nghe suy nghĩa và đề xuất của bạn."
+                            android:textColor="@color/black"
+                            android:gravity="left"
+                            android:layout_weight="1"
+                            android:textSize="13sp"
+                            />
+
+                        <Button
+                            android:id="@+id/buttonViewAllDiagnostic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"
+                            android:layout_gravity="right"
+                            android:layout_weight="5"
+                            android:backgroundTint="@color/white"
+                            android:gravity="right"
+                            android:text="Cung cấp thông tin phản hồi"
+                            android:textColor="@color/main_color"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
         </LinearLayout>
     </ScrollView>
 

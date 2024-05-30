@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -95,13 +96,14 @@ public class HomeFragment extends Fragment {
     private static final int MAX_REQUESTS_PER_SECOND = 1; // Số yêu cầu tối đa trong 1 giây
     private static final long RATE_LIMIT_INTERVAL_MS = 5000; // Thời gian giới hạn tần suất yêu cầu (5 giây)
     private long lastRequestTimeMs = 0;
-    public static final String urlBackend = " https://ba12-2405-4803-f7f0-cbb0-a826-6cc7-b9e-b3c1.ngrok-free.app";
+    public static final String urlBackend = "https://bd18-2405-4803-fd48-d610-a13b-938d-a7cd-188a.ngrok-free.app";
 //    private FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
     private PredictionViewModel viewModel;
     private HistoryViewModel historyViewModel;
     private LinearLayout mainHistoryLayout, componentHistory1, componentHistory2, componentViewSelectedImage;
-    private Button buttonPrediction;
-    private ImageView imageViewHistory1, imageViewHistory2;
+    private Button btnCapture, btnSelectImage, buttonPrediction, btnUserPage;
+    private ImageButton btnSettingPage;
+    private ImageView imgCapture, imageViewHistory1, imageViewHistory2;
     private TextView textDateTime1, textDateTime2, messageWhileDontHaveData;
     private TextView textDiseaseName1, textDiseaseName2;
     public static HomeFragment newInstance(String param1, String param2) {
@@ -121,18 +123,20 @@ public class HomeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(PredictionViewModel.class);
+        historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        Button btnCapture = (Button) view.findViewById(R.id.btnOpenCamera);
-        Button btnSelectImage = (Button) view.findViewById(R.id.btnSelectImage);
+        btnCapture = (Button) view.findViewById(R.id.btnOpenCamera);
+        btnSelectImage = (Button) view.findViewById(R.id.btnSelectImage);
         buttonPrediction = view.findViewById(R.id.buttonPrediction);
         componentViewSelectedImage = view.findViewById(R.id.componentViewSelectedImage);
 
-        ImageView imgCapture = (ImageView) view.findViewById(R.id.imageView1);
+        imgCapture = (ImageView) view.findViewById(R.id.imageView1);
 
         // Inflate the layout for this fragment
         if(imgCapture.getDrawable() == null) {
@@ -142,7 +146,91 @@ public class HomeFragment extends Fragment {
             // ImageView đã có ảnh, kích hoạt button
             buttonPrediction.setEnabled(true);
         }
+        // Button open user page
+        btnUserPage = view.findViewById(R.id.user_button);
 
+
+        Button btnOpenPTest = view.findViewById(R.id.buttonOpenViewP);
+        btnOpenPTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, ViewPredictFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(ViewPredictFragment.TAG) // Name can be null
+                        .commit();
+            }
+        });
+
+        // Tìm các view trong layout
+        mainHistoryLayout = view.findViewById(R.id.mainHistoryLayout);
+        componentHistory1 = view.findViewById(R.id.componentHistory1);
+        imageViewHistory1 = view.findViewById(R.id.imageViewHistory1);
+        textDateTime1 = view.findViewById(R.id.textDateTime1);
+        textDiseaseName1 = view.findViewById(R.id.textDiseaseName1);
+
+        componentHistory2 = view.findViewById(R.id.componentHistory2);
+        imageViewHistory2 = view.findViewById(R.id.imageViewHistory2);
+        textDateTime2 = view.findViewById(R.id.textDateTime2);
+        textDiseaseName2 = view.findViewById(R.id.textDiseaseName2);
+
+        messageWhileDontHaveData = view.findViewById(R.id.messageWhileDontHaveData);
+
+        messageWhileDontHaveData.setVisibility(View.VISIBLE);
+        componentHistory1.setVisibility(View.GONE);
+        componentHistory2.setVisibility(View.GONE);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Call fetchHistories() again to update data
+        historyViewModel.fetchHistories(urlBackend);
+        componentViewSelectedImage.setVisibility(View.GONE);
+        buttonPrediction.setVisibility(View.GONE);
+
+        btnUserPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, UserFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(UserFragment.TAG) // Name can be null
+                        .commit();
+            }
+        });
+        // Button open setting page
+        btnSettingPage = view.findViewById(R.id.settings_button);
+
+
+        // Button open camera
+        btnCapture.setOnClickListener(v -> {
+            Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            activityResultLauncher.launch(cInt);
+        });
+
+        // Button open gallery
+        btnSelectImage.setOnClickListener(v -> {
+            Intent cInt = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            activityResultLauncher.launch(cInt);
+        });
+        btnSettingPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(getActivity(), "Cài đặt", Toast.LENGTH_LONG).show();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, SettingFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(SettingFragment.TAG) // Name can be null
+                        .commit();
+            }
+        });
 
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
@@ -174,48 +262,8 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Chụp ảnh thất bại", Toast.LENGTH_SHORT).show();
             }
         });
-        // Button open user page
-        Button btnUserPage = view.findViewById(R.id.user_button);
-        btnUserPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, UserFragment.class, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack(UserFragment.TAG) // Name can be null
-                        .commit();
-            }
-        });
 
-        // Button open setting page
-        ImageButton btnSettingPage = view.findViewById(R.id.settings_button);
-        btnSettingPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(getActivity(), "Cài đặt", Toast.LENGTH_LONG).show();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, SettingFragment.class, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack(SettingFragment.TAG) // Name can be null
-                        .commit();
-            }
-        });
 
-        // Button open camera
-        btnCapture.setOnClickListener(v -> {
-            Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            activityResultLauncher.launch(cInt);
-        });
-
-        // Button open gallery
-        btnSelectImage.setOnClickListener(v -> {
-            Intent cInt = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            activityResultLauncher.launch(cInt);
-        });
-
-        // Button confirm predict
         buttonPrediction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,7 +294,6 @@ public class HomeFragment extends Fragment {
                             public void onResponse(JSONObject response) {
                                 // Handle the response from the server
 //                                Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_LONG).show();
-
                                 // Xử lý response từ API
                                 try {
                                     JSONArray dataArray = response.getJSONArray("listDiseases");
@@ -324,7 +371,11 @@ public class HomeFragment extends Fragment {
                         buttonPrediction.setEnabled(true);
                     }
                 });
-
+                // Unable retry api
+                request.setRetryPolicy(new DefaultRetryPolicy(
+                        0,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 long currentTimeMs = System.currentTimeMillis();
 
                 // Kiểm tra xem có thể thêm yêu cầu vào hàng đợi không
@@ -333,53 +384,22 @@ public class HomeFragment extends Fragment {
                     request.addMarker("rate-limited");
                     request.deliverError(new VolleyError("Rate limit exceeded"));
                     Toast.makeText(getActivity(), "Hệ thống đã ghi nhận hành động của bạn, vui lòng không thực hiện thêm", Toast.LENGTH_LONG).show();
-                    // Kích hoạt lại nút
-                    buttonPrediction.setEnabled(true);
+
                 } else {
                     // Nếu không, thêm yêu cầu vào hàng đợi và gửi đi
                     queue.add(request);
                     lastRequestTimeMs = currentTimeMs;
+                    // Kích hoạt lại nút
+                    buttonPrediction.setEnabled(true);
                 }
             }
         });
 
-
-        Button btnOpenPTest = view.findViewById(R.id.buttonOpenViewP);
-        btnOpenPTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, ViewPredictFragment.class, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack(ViewPredictFragment.TAG) // Name can be null
-                        .commit();
-            }
-        });
-
-        // Tìm các view trong layout
-        mainHistoryLayout = view.findViewById(R.id.mainHistoryLayout);
-        componentHistory1 = view.findViewById(R.id.componentHistory1);
-        imageViewHistory1 = view.findViewById(R.id.imageViewHistory1);
-        textDateTime1 = view.findViewById(R.id.textDateTime1);
-        textDiseaseName1 = view.findViewById(R.id.textDiseaseName1);
-
-        componentHistory2 = view.findViewById(R.id.componentHistory2);
-        imageViewHistory2 = view.findViewById(R.id.imageViewHistory2);
-        textDateTime2 = view.findViewById(R.id.textDateTime2);
-        textDiseaseName2 = view.findViewById(R.id.textDiseaseName2);
-
-        messageWhileDontHaveData = view.findViewById(R.id.messageWhileDontHaveData);
-        // Khởi tạo ViewModel
-        historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
-
-        // Gọi API để cập nhật dữ liệu lịch sử trong ViewModel
-        historyViewModel.fetchHistories(urlBackend);
-
-        // Quan sát dữ liệu lịch sử
         historyViewModel.getHistories().observe(getViewLifecycleOwner(), new Observer<List<JSONObject>>() {
             @Override
             public void onChanged(List<JSONObject> histories) {
+                System.out.println("history 333");
+                System.out.println("histories = "+ histories);
                 if (histories != null && !histories.isEmpty()) {
                     messageWhileDontHaveData.setVisibility(View.GONE);
                     if (histories.size() == 1) {
@@ -396,13 +416,13 @@ public class HomeFragment extends Fragment {
 
                             // Sử dụng Picasso để tải hình ảnh vào ImageView
                             Picasso.get().load(linkImage).into(imageViewHistory1);
-
+                            System.out.println("history 111");
                             componentHistory1.setVisibility(View.VISIBLE);
                             componentHistory2.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                    } else if (histories.size() == 2) {
+                    } else {
                         // Lấy lịch sử đầu tiên
                         JSONObject history1 = histories.get(0);
                         JSONObject history2 = histories.get(1);
@@ -428,7 +448,7 @@ public class HomeFragment extends Fragment {
 
                             // Sử dụng Picasso để tải hình ảnh vào ImageView
                             Picasso.get().load(linkImage).into(imageViewHistory2);
-
+                            System.out.println("history 222");
                             componentHistory1.setVisibility(View.VISIBLE);
                             componentHistory2.setVisibility(View.VISIBLE);
                         } catch (JSONException e) {
@@ -437,37 +457,10 @@ public class HomeFragment extends Fragment {
                     }
 
                 }
-                else {
-                    messageWhileDontHaveData.setVisibility(View.VISIBLE);
-                    componentHistory1.setVisibility(View.GONE);
-                    componentHistory2.setVisibility(View.GONE);
-                }
+
             }
         });
-
-        // Gọi API nếu dữ liệu lịch sử chưa được tải
-        if (historyViewModel.getHistories().getValue() == null || historyViewModel.getHistories().getValue().isEmpty()) {
-            historyViewModel.fetchHistories(urlBackend);
-        }
-
-
-        return view;
     }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Call fetchHistories() again to update data
-        historyViewModel.fetchHistories(urlBackend);
-        componentViewSelectedImage.setVisibility(View.GONE);
-        buttonPrediction.setVisibility(View.GONE);
-    }
-
-
-
-
-
 
     private static File bitmapToFile(Bitmap bitmap) {
         try {

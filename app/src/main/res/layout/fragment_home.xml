@@ -188,11 +188,12 @@
                             android:id="@+id/btnOpenCamera"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/color_button1"
+                            android:backgroundTint="@color/main_color3"
+                            android:textColor="@color/main_color2"
+
                             android:layout_weight="1"
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="10dp"
-                            android:textColor="@color/white"
                             android:text="Chụp ảnh" />
                         <Button
                             android:id="@+id/btnSelectImage"
@@ -201,8 +202,9 @@
                             android:layout_weight="1"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="20dp"
-                            android:backgroundTint="@color/color_button1"
-                            android:textColor="@color/white"
+                            android:backgroundTint="@color/main_color3"
+                            android:textColor="@color/main_color2"
+
                             android:text="Tải ảnh lên" />
                     </LinearLayout>
 
@@ -254,13 +256,13 @@
                 android:id="@+id/buttonPrediction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/color_button1"
                 android:layout_weight="1"
                 android:layout_marginLeft="100dp"
                 android:layout_marginRight="100dp"
                 android:layout_marginTop="10dp"
+                android:backgroundTint="@color/color_button1"
                 android:textColor="@color/white"
-                android:text="Xem dự đoán" />
+                android:text="Dự đoán mẫu ảnh" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -281,6 +283,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="6"
                     android:backgroundTint="@color/white"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:text="Xem tất cả" />
 
@@ -443,7 +446,7 @@
             android:layout_weight="1"
             android:text="Trang chủ"
             android:textStyle="normal"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:background="@drawable/border_button_nav"
             app:backgroundTint="@null"
             android:drawableBottom="@drawable/dashboard_fill0_wght400_grad0_opsz24"/>
