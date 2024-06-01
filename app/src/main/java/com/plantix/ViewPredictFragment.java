@@ -55,7 +55,7 @@ public class ViewPredictFragment extends Fragment {
      * @return A new instance of fragment ViewPredictFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static final String TAG = ViewPredictFragment.class.getName();
+    public static final String TAG = ViewAllHistoriesFragment.class.getName();
     private PredictionViewModel viewModel;
     public static ViewPredictFragment newInstance(String param1, String param2) {
         ViewPredictFragment fragment = new ViewPredictFragment();

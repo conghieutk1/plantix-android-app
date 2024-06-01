@@ -2,7 +2,7 @@
     android:shape="rectangle">
 
     <!-- Màu nền của viền -->
-    <solid android:color="@color/main_color3" />
+    <solid android:color="@color/main_color4" />
 
     <!-- Màu và độ rộng của viền -->
 <!--    <stroke-->

@@ -28,10 +28,7 @@ public class DiseaseData {
     }
 
     List<String> imageUrls = new ArrayList<>();
-//        imageUrls.add("https://plantix-image-pool.s3.ap-southeast-1.amazonaws.com/uploads/1/1716868299437");
-//        imageUrls.add("https://plantix-image-pool.s3.ap-southeast-1.amazonaws.com/uploads/1/1716868299444");
-//        imageUrls.add("https://plantix-image-pool.s3.ap-southeast-1.amazonaws.com/uploads/1/1716868299452");
-//        imageUrls.add("https://plantix-image-pool.s3.ap-southeast-1.amazonaws.com/uploads/1/1716868299459");
+
 
     public DiseaseData(String symtomMarkdown, String precautionMarkdown, String reasonMarkdown, String treatmentMarkdown, String descriptionMarkdown) {
         this.symtomMarkdown = symtomMarkdown;

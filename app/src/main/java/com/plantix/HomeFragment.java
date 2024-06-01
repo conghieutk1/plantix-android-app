@@ -1,6 +1,7 @@
 package com.plantix;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -96,12 +97,13 @@ public class HomeFragment extends Fragment {
     private static final int MAX_REQUESTS_PER_SECOND = 1; // Số yêu cầu tối đa trong 1 giây
     private static final long RATE_LIMIT_INTERVAL_MS = 5000; // Thời gian giới hạn tần suất yêu cầu (5 giây)
     private long lastRequestTimeMs = 0;
-    public static final String urlBackend = "https://bd18-2405-4803-fd48-d610-a13b-938d-a7cd-188a.ngrok-free.app";
+//    public static final String urlBackend = "https://9972-2405-4803-f5a9-1030-d5ee-1c5e-d9de-fe1c.ngrok-free.app";
+    public static final  String urlBackend = BuildConfig.URL_SERVER_BACKEND;
 //    private FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
     private PredictionViewModel viewModel;
     private HistoryViewModel historyViewModel;
     private LinearLayout mainHistoryLayout, componentHistory1, componentHistory2, componentViewSelectedImage;
-    private Button btnCapture, btnSelectImage, buttonPrediction, btnUserPage;
+    private Button btnCapture, btnSelectImage, buttonPrediction, btnUserPage, buttonViewAllHistories, buttonViewAllDiseases;
     private ImageButton btnSettingPage;
     private ImageView imgCapture, imageViewHistory1, imageViewHistory2;
     private TextView textDateTime1, textDateTime2, messageWhileDontHaveData;
@@ -134,9 +136,17 @@ public class HomeFragment extends Fragment {
         btnCapture = (Button) view.findViewById(R.id.btnOpenCamera);
         btnSelectImage = (Button) view.findViewById(R.id.btnSelectImage);
         buttonPrediction = view.findViewById(R.id.buttonPrediction);
+        buttonViewAllHistories = view.findViewById(R.id.buttonViewAllHistories);
         componentViewSelectedImage = view.findViewById(R.id.componentViewSelectedImage);
 
+        buttonViewAllDiseases = view.findViewById(R.id.buttonViewAllDiseases);
         imgCapture = (ImageView) view.findViewById(R.id.imageView1);
+        imgCapture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showImageFullScreen(v);
+            }
+        });
 
         // Inflate the layout for this fragment
         if(imgCapture.getDrawable() == null) {
@@ -149,7 +159,28 @@ public class HomeFragment extends Fragment {
         // Button open user page
         btnUserPage = view.findViewById(R.id.user_button);
 
-
+        buttonViewAllHistories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, ViewAllHistoriesFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(ViewAllHistoriesFragment.TAG) // Name can be null
+                        .commit();
+            }
+        });
+        buttonViewAllDiseases.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, ViewAllDiseasesFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(ViewAllDiseasesFragment.TAG) // Name can be null
+                        .commit();
+            }
+        });
         Button btnOpenPTest = view.findViewById(R.id.buttonOpenViewP);
         btnOpenPTest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,7 +237,17 @@ public class HomeFragment extends Fragment {
         });
         // Button open setting page
         btnSettingPage = view.findViewById(R.id.settings_button);
-
+        btnUserPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, UserFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(UserFragment.TAG) // Name can be null
+                        .commit();
+            }
+        });
 
         // Button open camera
         btnCapture.setOnClickListener(v -> {
@@ -398,8 +439,6 @@ public class HomeFragment extends Fragment {
         historyViewModel.getHistories().observe(getViewLifecycleOwner(), new Observer<List<JSONObject>>() {
             @Override
             public void onChanged(List<JSONObject> histories) {
-                System.out.println("history 333");
-                System.out.println("histories = "+ histories);
                 if (histories != null && !histories.isEmpty()) {
                     messageWhileDontHaveData.setVisibility(View.GONE);
                     if (histories.size() == 1) {
@@ -416,7 +455,6 @@ public class HomeFragment extends Fragment {
 
                             // Sử dụng Picasso để tải hình ảnh vào ImageView
                             Picasso.get().load(linkImage).into(imageViewHistory1);
-                            System.out.println("history 111");
                             componentHistory1.setVisibility(View.VISIBLE);
                             componentHistory2.setVisibility(View.GONE);
                         } catch (JSONException e) {
@@ -448,20 +486,36 @@ public class HomeFragment extends Fragment {
 
                             // Sử dụng Picasso để tải hình ảnh vào ImageView
                             Picasso.get().load(linkImage).into(imageViewHistory2);
-                            System.out.println("history 222");
                             componentHistory1.setVisibility(View.VISIBLE);
                             componentHistory2.setVisibility(View.VISIBLE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-
                 }
-
             }
         });
     }
+    public void showImageFullScreen(View view) {
+        assert getActivity() != null;
+        Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setContentView(R.layout.dialog_fullscreen_image);
 
+        ImageView fullScreenImageView = dialog.findViewById(R.id.fullScreenImageView);
+        ImageView originalImageView = (ImageView) view;
+
+        // Lấy drawable từ ImageView ban đầu và gán vào ImageView trong dialog
+        fullScreenImageView.setImageDrawable(originalImageView.getDrawable());
+
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss(); // Đóng Dialog khi nhấn vào nút Cancel
+            }
+        });
+        dialog.show();
+    }
     private static File bitmapToFile(Bitmap bitmap) {
         try {
             // Tạo một file tạm thời

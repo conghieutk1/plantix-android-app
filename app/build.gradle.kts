@@ -6,15 +6,18 @@ plugins {
 android {
     namespace = "com.plantix"
     compileSdk = 34
-
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.plantix"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "URL_SERVER_BACKEND", "\"https://2d1e-2405-4803-ff93-4da0-7508-cb8e-9280-2188.ngrok-free.app\"")
     }
 
     buildTypes {

@@ -7,6 +7,6 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="@drawable/border_radius"
+        android:foreground="@drawable/border_silder"
         android:scaleType="centerCrop"/>
 </FrameLayout>

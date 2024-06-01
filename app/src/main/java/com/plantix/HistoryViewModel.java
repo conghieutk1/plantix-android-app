@@ -19,9 +19,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class HistoryViewModel extends AndroidViewModel {
 
     private MutableLiveData<List<JSONObject>> histories;
+    private MutableLiveData<List<JSONObject>> allHistories;
     private RequestQueue requestQueue;
 
     public HistoryViewModel(@NonNull Application application) {
@@ -35,10 +37,14 @@ public class HistoryViewModel extends AndroidViewModel {
         }
         return histories;
     }
-
+    public LiveData<List<JSONObject>> getAllHistories() {
+        if (allHistories == null) {
+            allHistories = new MutableLiveData<>();
+        }
+        return allHistories;
+    }
     public void fetchHistories(String urlBackend) {
         String apiGetHistory = urlBackend + "/api/get-history-by-userId?userId=3";
-
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, apiGetHistory, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -50,6 +56,35 @@ public class HistoryViewModel extends AndroidViewModel {
                                 historyList.add(jsonArray.getJSONObject(i));
                             }
                             histories.setValue(historyList);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+
+        requestQueue.add(request);
+    }
+
+    public void fetchAllHistories(String urlBackend) {
+
+        String apiGetHistory = urlBackend + "/api/get-all-histories-by-userId?userId=3";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, apiGetHistory, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("histories");
+                            List<JSONObject> historyList = new ArrayList<>();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                historyList.add(jsonArray.getJSONObject(i));
+                            }
+                            allHistories.setValue(historyList);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

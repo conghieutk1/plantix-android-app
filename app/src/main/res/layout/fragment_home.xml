@@ -188,7 +188,7 @@
                             android:id="@+id/btnOpenCamera"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/main_color3"
+                            android:backgroundTint="@color/main_color4"
                             android:textColor="@color/main_color2"
 
                             android:layout_weight="1"
@@ -202,7 +202,7 @@
                             android:layout_weight="1"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="20dp"
-                            android:backgroundTint="@color/main_color3"
+                            android:backgroundTint="@color/main_color4"
                             android:textColor="@color/main_color2"
 
                             android:text="Tải ảnh lên" />
@@ -217,40 +217,69 @@
             </LinearLayout>
 
 
+<!--            <LinearLayout-->
+<!--                android:id="@+id/componentViewSelectedImage"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:orientation="vertical">-->
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_marginBottom="10dp"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:text="Mẫu ảnh của bạn"/>-->
+
+
+
+
+
+
+<!--                        <androidx.cardview.widget.CardView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center"-->
+
+<!--                            app:cardCornerRadius="15dp">-->
+
+<!--                            <ImageView-->
+<!--                                android:id="@+id/imageView1"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:scaleType="fitXY" />-->
+<!--                        </androidx.cardview.widget.CardView>-->
+
+
+
+
+<!--            </LinearLayout>-->
+
             <LinearLayout
                 android:id="@+id/componentViewSelectedImage"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:text="Mẫu ảnh của bạn"/>
+                android:layout_height="250dp"
+                android:gravity="center"
+                android:background="@drawable/border"
+                android:orientation="horizontal">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    app:cardCornerRadius="15dp">
 
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:orientation="horizontal">
                     <ImageView
                         android:id="@+id/imageView1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="20dp"
-                        android:background="@drawable/border"
-                        />
+                        android:onClick="showImageFullScreen"
+                        android:scaleType="centerCrop" />
+
+                </androidx.cardview.widget.CardView>
 
 
-                </LinearLayout>
+
             </LinearLayout>
-
-
 
             <Button
                 android:id="@+id/buttonPrediction"
@@ -278,13 +307,13 @@
                     android:text="Các chuẩn đoán của bạn"/>
 
                 <Button
-                    android:id="@+id/buttonViewAllDiagnostic"
+                    android:id="@+id/buttonViewAllHistories"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="6"
                     android:backgroundTint="@color/white"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="@color/color_button1"
                     android:text="Xem tất cả" />
 
             </LinearLayout>

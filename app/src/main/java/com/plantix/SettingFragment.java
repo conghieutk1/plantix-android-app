@@ -68,16 +68,13 @@ public class SettingFragment extends Fragment {
         btnReturnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().popBackStack(SettingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-
-//                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-//                fragmentManager.beginTransaction().addToBackStack("")
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.fragmentContainerView, HomeFragment.class, null)
-//                        .setReorderingAllowed(true)
-//                        .addToBackStack("name") // Name can be null
-//                        .commit();
+//                requireActivity().getSupportFragmentManager().popBackStack(SettingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, HomeFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(HomeFragment.TAG) // Name can be null
+                        .commit();
             }
         });
 

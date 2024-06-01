@@ -7,7 +7,7 @@
     <stroke
         app:backgroundTint="@null"
         android:width="1dp"
-        android:color="@color/main_color" />
+        android:color="@android:color/transparent" />
     <corners android:radius="30dp" />
-<!--    <corners android:radius="30dp" /> &lt;!&ndash; Bo tròn các góc với bán kính 30dp &ndash;&gt;-->
+    <!--    <corners android:radius="30dp" /> &lt;!&ndash; Bo tròn các góc với bán kính 30dp &ndash;&gt;-->
 </shape>

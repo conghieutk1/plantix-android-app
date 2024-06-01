@@ -2,10 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/user_page_fragment"
+    android:id="@+id/setting_page_fragment"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context=".UserFragment">
+    tools:context=".SettingFragment">
 
  <!-- TODO: Update blank fragment layout -->
  <LinearLayout
