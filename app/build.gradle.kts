@@ -17,7 +17,7 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "URL_SERVER_BACKEND", "\"https://2d1e-2405-4803-ff93-4da0-7508-cb8e-9280-2188.ngrok-free.app\"")
+        buildConfigField("String", "URL_SERVER_BACKEND", "\"https://2af8-2405-4803-fd82-c230-8579-61f6-c226-2158.ngrok-free.app\"")
     }
 
     buildTypes {

@@ -50,11 +50,11 @@
             android:orientation="vertical"
             >
             <TextView
-                android:id="@+id/messageWhileDontHaveData"
+                android:id="@+id/loading"
                 android:layout_width="match_parent"
                 android:textSize="14sp"
                 android:textColor="@color/black"
-                android:text="Không có dữ liệu"
+                android:text="Đang tải dữ liệu..."
                 android:layout_height="wrap_content">
             </TextView>
 

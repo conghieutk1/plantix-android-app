@@ -4,7 +4,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiseaseData {
+    private String keyDiseaseName;
+    private String enName;
+    private String viName;
     private String symtomMarkdown;
+
+    public String getKeyDiseaseName() {
+        return keyDiseaseName;
+    }
+
+    public void setKeyDiseaseName(String keyDiseaseName) {
+        this.keyDiseaseName = keyDiseaseName;
+    }
+
+    public String getEnName() {
+        return enName;
+    }
+
+    public void setEnName(String enName) {
+        this.enName = enName;
+    }
+
+    public String getViName() {
+        return viName;
+    }
+
+    public void setViName(String viName) {
+        this.viName = viName;
+    }
+
+    public DiseaseData(String keyDiseaseName, String enName, String viName, String symtomMarkdown, String precautionMarkdown, String reasonMarkdown, String treatmentMarkdown, String descriptionMarkdown) {
+        this.keyDiseaseName = keyDiseaseName;
+        this.enName = enName;
+        this.viName = viName;
+        this.symtomMarkdown = symtomMarkdown;
+        this.precautionMarkdown = precautionMarkdown;
+        this.reasonMarkdown = reasonMarkdown;
+        this.treatmentMarkdown = treatmentMarkdown;
+        this.descriptionMarkdown = descriptionMarkdown;
+    }
+
     private String precautionMarkdown;
     private String reasonMarkdown;
     private String treatmentMarkdown;

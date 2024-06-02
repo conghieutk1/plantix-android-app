@@ -8,6 +8,7 @@ import java.util.List;
 public class PredictionViewModel extends ViewModel {
     private MutableLiveData<List<Prediction>> predictions = new MutableLiveData<>();
     private MutableLiveData<DiseaseData> highestProbDisease = new MutableLiveData<>();
+    private MutableLiveData<String> urlImageSelectedDisease= new MutableLiveData<>();
     // Phương thức setter để đặt dữ liệu vào ViewModel
     public void setPredictions(List<Prediction> listDiseases) {
         predictions.setValue(listDiseases);
@@ -23,5 +24,12 @@ public class PredictionViewModel extends ViewModel {
     }
     public LiveData<DiseaseData> getHighestProbDisease() {
         return highestProbDisease;
+    }
+
+    public void setUrlImageSelectedDisease(String string) {
+        urlImageSelectedDisease.setValue(string);
+    }
+    public LiveData<String> getUrlImageSelectedDisease() {
+        return urlImageSelectedDisease;
     }
 }

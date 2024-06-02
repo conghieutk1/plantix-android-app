@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -106,8 +107,7 @@ public class HomeFragment extends Fragment {
     private Button btnCapture, btnSelectImage, buttonPrediction, btnUserPage, buttonViewAllHistories, buttonViewAllDiseases;
     private ImageButton btnSettingPage;
     private ImageView imgCapture, imageViewHistory1, imageViewHistory2;
-    private TextView textDateTime1, textDateTime2, messageWhileDontHaveData;
-    private TextView textDiseaseName1, textDiseaseName2;
+    private TextView textDateTime1, textDateTime2, loading, textSelectedImage, textDiseaseName1, textDiseaseName2;
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -138,6 +138,7 @@ public class HomeFragment extends Fragment {
         buttonPrediction = view.findViewById(R.id.buttonPrediction);
         buttonViewAllHistories = view.findViewById(R.id.buttonViewAllHistories);
         componentViewSelectedImage = view.findViewById(R.id.componentViewSelectedImage);
+        textSelectedImage = view.findViewById(R.id.textSelectedImage);
 
         buttonViewAllDiseases = view.findViewById(R.id.buttonViewAllDiseases);
         imgCapture = (ImageView) view.findViewById(R.id.imageView1);
@@ -206,9 +207,17 @@ public class HomeFragment extends Fragment {
         textDateTime2 = view.findViewById(R.id.textDateTime2);
         textDiseaseName2 = view.findViewById(R.id.textDiseaseName2);
 
-        messageWhileDontHaveData = view.findViewById(R.id.messageWhileDontHaveData);
+        loading = view.findViewById(R.id.loading);
 
-        messageWhileDontHaveData.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                loading.setVisibility(View.GONE);
+//                noDataText.setVisibility(View.VISIBLE);
+                loading.setText("Không có dữ liệu");
+            }
+        }, 3000); // 10 giây = 10000 milliseconds
         componentHistory1.setVisibility(View.GONE);
         componentHistory2.setVisibility(View.GONE);
 
@@ -222,6 +231,7 @@ public class HomeFragment extends Fragment {
         // Call fetchHistories() again to update data
         historyViewModel.fetchHistories(urlBackend);
         componentViewSelectedImage.setVisibility(View.GONE);
+        textSelectedImage.setVisibility(View.GONE);
         buttonPrediction.setVisibility(View.GONE);
 
         btnUserPage.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +294,7 @@ public class HomeFragment extends Fragment {
                         imgCapture.setImageURI(selectedImageUri);
                         buttonPrediction.setEnabled(true);
                         componentViewSelectedImage.setVisibility(View.VISIBLE);
+                        textSelectedImage.setVisibility(View.VISIBLE);
                         buttonPrediction.setVisibility(View.VISIBLE);
                     } else {
                         // Xử lý khi chụp ảnh từ camera
@@ -294,6 +305,7 @@ public class HomeFragment extends Fragment {
                             imgCapture.setImageBitmap(imageBitmap);
                             buttonPrediction.setEnabled(true);
                             componentViewSelectedImage.setVisibility(View.VISIBLE);
+                            textSelectedImage.setVisibility(View.VISIBLE);
                             buttonPrediction.setVisibility(View.VISIBLE);
                         }
                     }
@@ -358,11 +370,15 @@ public class HomeFragment extends Fragment {
 
                                     // Lấy thông tin về bệnh
                                     DiseaseData highestProbDisease = new DiseaseData(
+                                            highestProbDiseaseObject.getString("keyDiseaseName"),
+                                            highestProbDiseaseObject.getString("enName"),
+                                            highestProbDiseaseObject.getString("viName"),
                                             highestProbDiseaseObject.getString("symtomMarkdown"),
                                             highestProbDiseaseObject.getString("precautionMarkdown"),
                                             highestProbDiseaseObject.getString("reasonMarkdown"),
                                             highestProbDiseaseObject.getString("treatmentMarkdown"),
                                             highestProbDiseaseObject.getString("descriptionMarkdown")
+
                                     );
 
                                     // Lấy thông tin về hình ảnh
@@ -377,6 +393,9 @@ public class HomeFragment extends Fragment {
                                     // Thêm thông tin hình ảnh vào đối tượng bệnh
                                     highestProbDisease.setImageUrls(imageLinks);
                                     viewModel.setHighestProbDisease(highestProbDisease);
+
+                                    String urlImageSelectedDisease = response.getString("urlImageSelectedDisease");
+                                    viewModel.setUrlImageSelectedDisease(urlImageSelectedDisease);
 
                                     //Upload image to AWS S3
                                     // Xử lý response từ API và lấy presignedUrl từ response
@@ -407,7 +426,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle errors
-                        Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Có lỗi xảy ra, vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                         // Kích hoạt lại nút ngay cả khi có lỗi
                         buttonPrediction.setEnabled(true);
                     }
@@ -440,7 +459,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(List<JSONObject> histories) {
                 if (histories != null && !histories.isEmpty()) {
-                    messageWhileDontHaveData.setVisibility(View.GONE);
+                    loading.setVisibility(View.GONE);
                     if (histories.size() == 1) {
                         // Lấy lịch sử đầu tiên
                         JSONObject history = histories.get(0);
@@ -493,6 +512,8 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 }
+
+                loading.setText("Không có dữ liệu");
             }
         });
     }

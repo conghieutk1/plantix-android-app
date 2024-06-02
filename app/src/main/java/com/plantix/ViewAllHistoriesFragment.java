@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class ViewAllHistoriesFragment extends Fragment {
     public static final String urlBackend = BuildConfig.URL_SERVER_BACKEND;
     private LinearLayout allHistoriesContainer;
     private ImageButton btnReturnHome;
-    private TextView messageWhileDontHaveData;
+    private TextView loading;
     public ViewAllHistoriesFragment() {
         // Required empty public constructor
     }
@@ -84,8 +85,17 @@ public class ViewAllHistoriesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_all_histories, container, false);
         allHistoriesContainer = view.findViewById(R.id.all_histories_container);
-        messageWhileDontHaveData = view.findViewById(R.id.messageWhileDontHaveData);
-        messageWhileDontHaveData.setVisibility(View.VISIBLE);
+        loading = view.findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                loading.setVisibility(View.GONE);
+//                noDataText.setVisibility(View.VISIBLE);
+                loading.setText("Không có dữ liệu");
+            }
+        }, 3000); // 10 giây = 10000 milliseconds
 
         btnReturnHome = view.findViewById(R.id.return_button);
 
@@ -103,7 +113,7 @@ public class ViewAllHistoriesFragment extends Fragment {
                 // Clear any existing components first
                 allHistoriesContainer.removeAllViews();
                 if (histories != null && !histories.isEmpty()) {
-                    messageWhileDontHaveData.setVisibility(View.GONE);
+                    loading.setVisibility(View.GONE);
                     for (int i = 0; i < histories.size(); i++) {
                         try {
                             JSONObject history = histories.get(i);
