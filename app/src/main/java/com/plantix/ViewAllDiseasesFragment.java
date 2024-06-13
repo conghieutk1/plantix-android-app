@@ -124,9 +124,7 @@ public class ViewAllDiseasesFragment extends Fragment {
                             String enName = history.getString("enName");
                             String viName = history.getString("viName");
                             String linkImage = history.getString("imageData");
-                            System.out.println("enName" + enName);
-                            System.out.println("viName" + viName);
-                            System.out.println("linkImage" + linkImage);
+
                             // Inflate new component layout
                             LayoutInflater inflater = LayoutInflater.from(getContext());
                             View component = inflater.inflate(R.layout.disease_component, allDiseasesContainer, false);
@@ -138,7 +136,14 @@ public class ViewAllDiseasesFragment extends Fragment {
 
                             textNameEng.setText(enName);
                             textNameVi.setText(viName);
-                            Picasso.get().load(linkImage).into(imageViewDisease);
+                            if (!linkImage.isEmpty()) {
+                                Picasso.get().load(linkImage).error(R.drawable.photo_24dp_fill0_wght400_grad0_opsz24).into(imageViewDisease);
+                            } else {
+                                imageViewDisease.setImageResource(R.drawable.photo_24dp_fill0_wght400_grad0_opsz24);
+//                                Picasso.get().load("https://endlessicons.com/wp-content/uploads/2012/11/image-holder-icon-614x460.png").into(imageViewDisease);
+                            }
+
+
 
                             // Add the new component to the parent layout
                             allDiseasesContainer.addView(component);

@@ -37,7 +37,7 @@ public class DiseaseViewModel extends AndroidViewModel {
     }
     public void fetchAllDiseases(String urlBackend) {
 
-        String apiGetHistory = urlBackend + "/api/get-all-diseases-by-userId?userId=3";
+        String apiGetHistory = urlBackend + "/api/get-all-diseases-by-userId?userId=4";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, apiGetHistory, null,
                 new Response.Listener<JSONObject>() {
                     @Override

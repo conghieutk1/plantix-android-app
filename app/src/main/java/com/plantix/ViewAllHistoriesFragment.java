@@ -117,6 +117,8 @@ public class ViewAllHistoriesFragment extends Fragment {
                     for (int i = 0; i < histories.size(); i++) {
                         try {
                             JSONObject history = histories.get(i);
+//                            System.out.println("history" +history);
+                            String historyId = history.getString("historyId");
                             String dateTime = history.getString("DateTime");
                             String linkImage = history.getString("linkImage");
                             String diseaseName = history.getString("diseaseName");
@@ -132,7 +134,30 @@ public class ViewAllHistoriesFragment extends Fragment {
                             textDateTime.setText(dateTime);
                             textDiseaseName.setText(diseaseName);
                             Picasso.get().load(linkImage).into(imageViewHistory);
+                            // Set click listener on the component
+                            component.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // Handle the click event, e.g., show details, start a new activity, etc.
+                                    // You can use 'history' JSONObject to get the clicked item data
+//                                    historyViewModel.setSelectedHistoryID(historyId);
+//                                    historyViewModel.fetchSelectedHistory(urlBackend, historyId);
 
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("historyId", historyId);
+                                    ViewAHistoryFragment fragment = new ViewAHistoryFragment();
+                                    fragment.setArguments(bundle);
+                                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                                    fragmentManager.beginTransaction()
+                                            .replace(R.id.fragmentContainerView, fragment)
+                                            .setReorderingAllowed(true)
+                                            .addToBackStack(ViewAHistoryFragment.TAG)
+                                            .commit();
+                                    System.out.println("goto ViewAllHistoriesFragment = " + historyId);
+
+
+                                }
+                            });
                             // Add the new component to the parent layout
                             allHistoriesContainer.addView(component);
 

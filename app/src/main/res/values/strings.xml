@@ -12,4 +12,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_intro">IntroActivity</string>
+    <string-array name="true_false_array">
+        <item>Đúng</item>
+        <item>Sai</item>
+    </string-array>
 </resources>

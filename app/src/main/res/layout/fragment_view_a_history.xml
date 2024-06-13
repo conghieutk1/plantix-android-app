@@ -26,7 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Xem chuẩn đoán"
+            android:text="Lịch sử chuẩn đoán"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:paddingLeft="10dp"
@@ -37,6 +37,14 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:src="@drawable/feedback_24dp_fill0_wght400_grad0_opsz24" />
+        <ImageButton
+            android:id="@+id/buttonRemoveHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="2dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/delete_24dp_fill0_wght400_grad0_opsz24" />
     </LinearLayout>
 
     <ScrollView
@@ -50,58 +58,77 @@
             android:padding="20dp"
             android:background="@color/background_component"
             android:layout_height="match_parent">
-
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_component1"
+                android:padding="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/textDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/background_component1"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="5dp"
+                    android:text="Dự đoán ngày 12/09/2024" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_component1"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="5dp"
+                    android:background="@drawable/border_nav"
+                    android:text="Kết quả dự đoán" />
+
+                <!-- table_layout.xml -->
+                <TableLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tableLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*"
                     android:padding="10dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:paddingBottom="5dp"
-                        android:background="@drawable/border_nav"
-                        android:text="Kết quả dự đoán" />
+                    android:background="@android:color/white"
+                    android:divider="@drawable/divider"
+                    android:showDividers="middle">
 
-                    <!-- table_layout.xml -->
-                    <TableLayout
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/tableLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:stretchColumns="*"
-                        android:padding="10dp"
-                        android:background="@android:color/white"
-                        android:divider="@drawable/divider"
-                        android:showDividers="middle">
+                    <!--                &lt;!&ndash; Hàng 1 &ndash;&gt;-->
+                    <!--                <TableRow>-->
+                    <!--                    <include layout="@layout/table_cell_layout"  />-->
+                    <!--                    <include layout="@layout/table_cell_layout" />-->
+                    <!--                    <include layout="@layout/table_cell_layout" />-->
+                    <!--                    <include layout="@layout/table_cell_layout" />-->
+                    <!--                </TableRow>-->
 
-                        <!--                &lt;!&ndash; Hàng 1 &ndash;&gt;-->
-                        <!--                <TableRow>-->
-                        <!--                    <include layout="@layout/table_cell_layout"  />-->
-                        <!--                    <include layout="@layout/table_cell_layout" />-->
-                        <!--                    <include layout="@layout/table_cell_layout" />-->
-                        <!--                    <include layout="@layout/table_cell_layout" />-->
-                        <!--                </TableRow>-->
+                    <!--                &lt;!&ndash; Hàng 2 &ndash;&gt;-->
+                    <!--                <TableRow>-->
+                    <!--                    <include layout="@layout/table_cell_layout" />-->
+                    <!--                    <include layout="@layout/table_cell_layout" />-->
+                    <!--                    <include layout="@layout/table_cell_layout" />-->
+                    <!--                    <include layout="@layout/table_cell_layout" />-->
+                    <!--                </TableRow>-->
 
-                        <!--                &lt;!&ndash; Hàng 2 &ndash;&gt;-->
-                        <!--                <TableRow>-->
-                        <!--                    <include layout="@layout/table_cell_layout" />-->
-                        <!--                    <include layout="@layout/table_cell_layout" />-->
-                        <!--                    <include layout="@layout/table_cell_layout" />-->
-                        <!--                    <include layout="@layout/table_cell_layout" />-->
-                        <!--                </TableRow>-->
+                    <!-- Hàng 3 -->
+                    <!-- Thêm các hàng khác nếu cần -->
 
-                        <!-- Hàng 3 -->
-                        <!-- Thêm các hàng khác nếu cần -->
-
-                    </TableLayout>
+                </TableLayout>
 
 
-                </LinearLayout>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -126,7 +153,6 @@
                     android:onClick="showImageFullScreen"
                     android:scaleType="centerCrop" />
             </androidx.cardview.widget.CardView>
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

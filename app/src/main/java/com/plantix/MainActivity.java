@@ -1,5 +1,6 @@
 package com.plantix;
 
+import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
@@ -24,6 +25,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.multidex.MultiDex;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -72,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgCapture;
     private static final int Image_Capture_Code = 1;
     private PredictionViewModel viewModel;
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

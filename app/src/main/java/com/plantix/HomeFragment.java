@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -217,7 +219,7 @@ public class HomeFragment extends Fragment {
 //                noDataText.setVisibility(View.VISIBLE);
                 loading.setText("Không có dữ liệu");
             }
-        }, 3000); // 10 giây = 10000 milliseconds
+        }, 10000); // 10 giây = 10000 milliseconds
         componentHistory1.setVisibility(View.GONE);
         componentHistory2.setVisibility(View.GONE);
 
@@ -296,6 +298,8 @@ public class HomeFragment extends Fragment {
                         componentViewSelectedImage.setVisibility(View.VISIBLE);
                         textSelectedImage.setVisibility(View.VISIBLE);
                         buttonPrediction.setVisibility(View.VISIBLE);
+                        Bitmap imageBitmap = getBitmapFromUri(selectedImageUri);
+                        viewModel.setImage(imageBitmap);
                     } else {
                         // Xử lý khi chụp ảnh từ camera
                         Bundle extras = data.getExtras();
@@ -307,6 +311,7 @@ public class HomeFragment extends Fragment {
                             componentViewSelectedImage.setVisibility(View.VISIBLE);
                             textSelectedImage.setVisibility(View.VISIBLE);
                             buttonPrediction.setVisibility(View.VISIBLE);
+                            viewModel.setImage(imageBitmap);
                         }
                     }
                 }
@@ -336,7 +341,7 @@ public class HomeFragment extends Fragment {
 
                 try {
                     jsonObject.put("base64FromAndroid", base64String);
-                    jsonObject.put("userId", "3");
+                    jsonObject.put("userId", "4");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -400,7 +405,7 @@ public class HomeFragment extends Fragment {
                                     //Upload image to AWS S3
                                     // Xử lý response từ API và lấy presignedUrl từ response
                                     String presignedUrl = response.getString("presignedUrl");
-
+//                                    System.out.println("presignedUrl = "+ presignedUrl);
 //                                    Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                                     File imageFile = bitmapToFile(bitmap);
                                     if (imageFile != null) {
@@ -460,10 +465,13 @@ public class HomeFragment extends Fragment {
             public void onChanged(List<JSONObject> histories) {
                 if (histories != null && !histories.isEmpty()) {
                     loading.setVisibility(View.GONE);
+                    String historyId1 = "";
+                    String historyId2 = "";
                     if (histories.size() == 1) {
                         // Lấy lịch sử đầu tiên
                         JSONObject history = histories.get(0);
                         try {
+                            historyId1 = history.getString("id");
                             String dateTime = history.getString("DateTime");
                             String linkImage = history.getString("linkImage");
                             String diseaseName = history.getString("diseaseName");
@@ -473,7 +481,12 @@ public class HomeFragment extends Fragment {
                             textDiseaseName1.setText(diseaseName);
 
                             // Sử dụng Picasso để tải hình ảnh vào ImageView
-                            Picasso.get().load(linkImage).into(imageViewHistory1);
+//                            Picasso.get().load(linkImage).into(imageViewHistory1);
+                            if (!linkImage.isEmpty()) {
+                                Picasso.get().load(linkImage).error(R.drawable.photo_24dp_fill0_wght400_grad0_opsz24).into(imageViewHistory1);
+                            } else {
+                                imageViewHistory1.setImageResource(R.drawable.photo_24dp_fill0_wght400_grad0_opsz24);
+                            }
                             componentHistory1.setVisibility(View.VISIBLE);
                             componentHistory2.setVisibility(View.GONE);
                         } catch (JSONException e) {
@@ -484,17 +497,22 @@ public class HomeFragment extends Fragment {
                         JSONObject history1 = histories.get(0);
                         JSONObject history2 = histories.get(1);
                         try {
+                            historyId1 = history1.getString("id");
                             String dateTime = history1.getString("DateTime");
                             String linkImage = history1.getString("linkImage");
                             String diseaseName = history1.getString("diseaseName");
-
                             // Cập nhật TextView với dữ liệu mới
                             textDateTime1.setText(dateTime);
                             textDiseaseName1.setText(diseaseName);
 
                             // Sử dụng Picasso để tải hình ảnh vào ImageView
-                            Picasso.get().load(linkImage).into(imageViewHistory1);
+                            if (!linkImage.isEmpty()) {
+                                Picasso.get().load(linkImage).error(R.drawable.photo_24dp_fill0_wght400_grad0_opsz24).into(imageViewHistory1);
+                            } else {
+                                imageViewHistory1.setImageResource(R.drawable.photo_24dp_fill0_wght400_grad0_opsz24);
+                            }
 
+                            historyId2 = history2.getString("id");
                             dateTime = history2.getString("DateTime");
                             linkImage = history2.getString("linkImage");
                             diseaseName = history2.getString("diseaseName");
@@ -504,13 +522,51 @@ public class HomeFragment extends Fragment {
                             textDiseaseName2.setText(diseaseName);
 
                             // Sử dụng Picasso để tải hình ảnh vào ImageView
-                            Picasso.get().load(linkImage).into(imageViewHistory2);
+                            if (!linkImage.isEmpty()) {
+                                Picasso.get().load(linkImage).error(R.drawable.photo_24dp_fill0_wght400_grad0_opsz24).into(imageViewHistory2);
+                            } else {
+                                imageViewHistory2.setImageResource(R.drawable.photo_24dp_fill0_wght400_grad0_opsz24);
+                            }
                             componentHistory1.setVisibility(View.VISIBLE);
                             componentHistory2.setVisibility(View.VISIBLE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
+                    String finalHistoryId1 = historyId1;
+                    String finalHistoryId2= historyId2;
+                    componentHistory1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("historyId", finalHistoryId1);
+                            ViewAHistoryFragment fragment = new ViewAHistoryFragment();
+                            fragment.setArguments(bundle);
+                            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.fragmentContainerView, fragment)
+                                    .setReorderingAllowed(true)
+                                    .addToBackStack(ViewAHistoryFragment.TAG)
+                                    .commit();
+                            System.out.println("goto ViewAllHistoriesFragment = " + finalHistoryId1);
+                        }
+                    });
+                    componentHistory2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("historyId", finalHistoryId2);
+                            ViewAHistoryFragment fragment = new ViewAHistoryFragment();
+                            fragment.setArguments(bundle);
+                            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.fragmentContainerView, fragment)
+                                    .setReorderingAllowed(true)
+                                    .addToBackStack(ViewAHistoryFragment.TAG)
+                                    .commit();
+                            System.out.println("goto ViewAllHistoriesFragment = " + finalHistoryId2);
+                        }
+                    });
                 }
 
                 loading.setText("Không có dữ liệu");
@@ -567,7 +623,8 @@ public class HomeFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+//        Log.d("UploadS3", "Presigned URL: " + presignedUrl);
+//        Log.d("UploadS3", "File size: " + fileData.length);
         ByteArrayRequest request = new ByteArrayRequest(Request.Method.PUT, presignedUrl, fileData, "image/jpeg",
                 new Response.Listener<byte[]>() {
                     @Override
@@ -579,6 +636,7 @@ public class HomeFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        System.out.println("err: "+ error);
                         // Handle error
                         Toast.makeText(getActivity(), "Có lỗi xảy ra", Toast.LENGTH_LONG).show();
                     }
@@ -586,5 +644,21 @@ public class HomeFragment extends Fragment {
 
         requestQueue.add(request);
     }
+    public Bitmap getBitmapFromUri(Uri uri) {
+        try {
+            // Sử dụng Context của Fragment để truy cập ContentResolver
+            Context context = requireContext(); // hoặc getContext() tùy theo trường hợp
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            if (inputStream != null) {
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                inputStream.close();
+                return bitmap;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 }

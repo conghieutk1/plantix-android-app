@@ -2,7 +2,7 @@ package com.plantix;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.graphics.Bitmap;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,8 +15,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Handler;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,7 +40,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -57,10 +54,10 @@ import io.noties.markwon.Markwon;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ViewPredictFragment#newInstance} factory method to
+ * Use the {@link ViewAHistoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewPredictFragment extends Fragment {
+public class ViewAHistoryFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -70,8 +67,18 @@ public class ViewPredictFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private HistoryViewModel historyViewModel;
+    public static final  String urlBackend = BuildConfig.URL_SERVER_BACKEND;
+    public static final String TAG = ViewAHistoryFragment.class.getName();
 
-    public ViewPredictFragment() {
+    private LinearLayout reasonContainer, treatmentContainer, precautionContainer;
+    private Button buttonViewMore, buttonGotoHome;
+    private ImageButton buttonFeedback, buttonRemoveHistory;
+    private Spinner feedbackSpinner;
+    private TextView textFeedbackSpinner;
+    private String disease = "";
+    private String urlImageForFeedback;
+    public ViewAHistoryFragment() {
         // Required empty public constructor
     }
 
@@ -81,24 +88,11 @@ public class ViewPredictFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ViewPredictFragment.
+     * @return A new instance of fragment ViewAHistoryFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static final  String urlBackend = BuildConfig.URL_SERVER_BACKEND;
-    public static final String TAG = ViewAllHistoriesFragment.class.getName();
-    private PredictionViewModel viewModel;
-    private String disease = "";
-    private LinearLayout reasonContainer, treatmentContainer, precautionContainer;
-    private Button buttonViewMore, buttonGotoHome;
-    private ImageButton buttonFeedback;
-    private Spinner feedbackSpinner;
-    private TextView textFeedbackSpinner;
-    private String urlImageForFeedback;
-    private Handler handler;
-    private Runnable runnable;
-//    private RequestQueue requestQueue1;
-    public static ViewPredictFragment newInstance(String param1, String param2) {
-        ViewPredictFragment fragment = new ViewPredictFragment();
+    public static ViewAHistoryFragment newInstance(String param1, String param2) {
+        ViewAHistoryFragment fragment = new ViewAHistoryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -113,21 +107,29 @@ public class ViewPredictFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        viewModel = new ViewModelProvider(requireActivity()).get(PredictionViewModel.class);
-
+        historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_view_predict, container, false);
-
-
+        View view = inflater.inflate(R.layout.fragment_view_a_history, container, false);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String historyId = bundle.getString("historyId");
+            if (historyId != null) {
+                // Sử dụng historyId ở đây
+                historyViewModel.setSelectedHistoryID(historyId);
+            }
+        }
+//        historyViewModel.setSelectedHistoryID("19");
+//        System.out.println("history ID = "+ historyViewModel.getSelectedHistoryID());
+//        historyViewModel.fetchSelectedHistory(urlBackend, historyViewModel.getSelectedHistoryID());
         buttonViewMore = view.findViewById(R.id.buttonViewTreatment);
         buttonViewMore.setVisibility(View.GONE);
         buttonGotoHome = view.findViewById(R.id.buttonGotoHome);
         buttonGotoHome.setVisibility(View.GONE);
+        buttonRemoveHistory = view.findViewById(R.id.buttonRemoveHistory);
 
         reasonContainer = view.findViewById(R.id.reasonContainer);
         reasonContainer.setVisibility(View.GONE);
@@ -143,10 +145,11 @@ public class ViewPredictFragment extends Fragment {
         btnReturnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().popBackStack(ViewPredictFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                requireActivity().getSupportFragmentManager().popBackStack(ViewAHistoryFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
 
+        // Inflate the layout for this fragment
         return view;
     }
 
@@ -154,11 +157,31 @@ public class ViewPredictFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         buttonFeedback.setVisibility(View.GONE);
-        ImageView SelectedImage = view.findViewById(R.id.SelectedImage);
-        SelectedImage.setOnClickListener(new View.OnClickListener() {
+        ImageView imageView = view.findViewById(R.id.SelectedImage);
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showImageFullScreen(v);
+            }
+        });
+        TableLayout tableLayout = view.findViewById(R.id.tableLayout);
+        tableLayout.removeAllViews();
+        TableRow headerRow = createHeaderRow();
+        setTextViewColor(headerRow, Color.BLACK);
+        // Thêm hàng tiêu đề vào bảng
+        tableLayout.addView(headerRow);
+
+        TableRow row = new TableRow(requireContext());
+        TextView notiTextView = createTextView(String.valueOf("Không có dữ liệu"));
+        row.addView(notiTextView);
+        tableLayout.addView(row);
+
+        historyViewModel.getSelectedHistoryID().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String id) {
+                // Handle the change
+                // You can use the 'id' to fetch data or update UI
+                historyViewModel.fetchSelectedHistory(urlBackend, id);
             }
         });
         buttonViewMore.setOnClickListener(new View.OnClickListener() {
@@ -174,30 +197,30 @@ public class ViewPredictFragment extends Fragment {
         buttonGotoHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().popBackStack(ViewPredictFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                requireActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
-
         buttonFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Feetback");
                 showFeedbackDialog();
             }
         });
+        buttonRemoveHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = getArguments();
+                if (bundle != null) {
+                    String historyId = bundle.getString("historyId");
+                    if (historyId != null) {
+                        // Sử dụng historyId ở đây
+                        showDeleteConfirmationDialog(historyId);
+                    }
+                }
 
-        TableLayout tableLayout = view.findViewById(R.id.tableLayout);
-        tableLayout.removeAllViews();
-        TableRow headerRow = createHeaderRow();
-        setTextViewColor(headerRow, Color.BLACK);
-        // Thêm hàng tiêu đề vào bảng
-        tableLayout.addView(headerRow);
-
-        TableRow row = new TableRow(requireContext());
-        TextView notiTextView = createTextView(String.valueOf("Không có dữ liệu"));
-        row.addView(notiTextView);
-        tableLayout.addView(row);
-        viewModel.getPredictions().observe(getViewLifecycleOwner(), new Observer<List<Prediction>>() {
+            }
+        });
+        historyViewModel.getPredictionsSelectedHistory().observe(getViewLifecycleOwner(), new Observer<List<Prediction>>() {
             @Override
             public void onChanged(List<Prediction> predictions) {
 //                Toast.makeText(getActivity(), "predictions", Toast.LENGTH_LONG).show();
@@ -243,7 +266,7 @@ public class ViewPredictFragment extends Fragment {
             }
         });
 
-        viewModel.getHighestProbDisease().observe(getViewLifecycleOwner(), new Observer<DiseaseData>() {
+        historyViewModel.getHighestProbDiseaseSelectedHistory().observe(getViewLifecycleOwner(), new Observer<DiseaseData>() {
             @Override
             public void onChanged(DiseaseData highestProbDisease) {
 //                Toast.makeText(getActivity(), "highestProbDisease", Toast.LENGTH_LONG).show();
@@ -295,54 +318,71 @@ public class ViewPredictFragment extends Fragment {
             }
         });
 
-        viewModel.getUrlImageSelectedDisease().observe(getViewLifecycleOwner(), new Observer<String>() {
+        historyViewModel.getUrlImageSelectedHistory().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 if (s != null && !s.isEmpty()) {
                     urlImageForFeedback = s;
                     buttonFeedback.setVisibility(View.VISIBLE);
+//                    imageView = view.findViewById(R.id.SelectedImage);
+                    Picasso.get().load(s).into(imageView);
                 }
 
 
             }
         });
-        viewModel.getImage().observe(getViewLifecycleOwner(), new Observer<Bitmap>() {
+
+        historyViewModel.getTimeSelectedHistory().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
-            public void onChanged(Bitmap bitmap) {
-                SelectedImage.setImageBitmap(bitmap);
+            public void onChanged(String s) {
+                if (s != null && !s.isEmpty()) {
+                    TextView textView = view.findViewById(R.id.textDate);
+                    textView.setText("Thời gian: " + s);
+                }
+
+
             }
         });
-    }
-    private void startImageReload(ImageView imageView, String url) {
-        handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                Picasso.get()
-                        .load(url)
-                        .error(R.drawable.dashboard_fill0_wght400_grad0_opsz24)
-                        .into(imageView);
 
-                // Lặp lại sau 2 giây
-                handler.postDelayed(this, 2000);
-            }
-        };
-        handler.post(runnable); // Bắt đầu lặp lại
+
+    }
+    private void showDeleteConfirmationDialog(String historyId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Xác nhận xoá")
+                .setMessage("Bạn có chắc muốn xoá lịch sử không?")
+                .setPositiveButton("Xoá", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Xoá lịch sử ở đây
+                        deleteHistory(historyId);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Hủy bỏ thao tác
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        positiveButton.setTextColor(Color.parseColor("#006769"));
+        negativeButton.setTextColor(Color.parseColor("#006769"));
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (handler != null && runnable != null) {
-            handler.removeCallbacks(runnable); // Ngừng lặp lại khi view bị hủy
-        }
-    }
     private void showFeedbackDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View dialogView = inflater.inflate(R.layout.dialog_feedback, null);
         feedbackSpinner = dialogView.findViewById(R.id.feedbackSpinner);
         textFeedbackSpinner = dialogView.findViewById(R.id.textFeedbackSpinner);
 
+        historyViewModel.getHighestProbDiseaseSelectedHistory().observe(getViewLifecycleOwner(), new Observer<DiseaseData>() {
+            @Override
+            public void onChanged(DiseaseData highestProbDisease) {
+                disease = highestProbDisease.getViName();
+            }
+        });
         loadFeedbackOptions();
         assert getActivity() != null;
         Spinner feedbackTrueFalseSpinner = dialogView.findViewById(R.id.feedbackTrueFalseSpinner);
@@ -385,12 +425,7 @@ public class ViewPredictFragment extends Fragment {
         // Thiết lập background cho dialog
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.background_component1);
         dialog.show();
-        viewModel.getHighestProbDisease().observe(getViewLifecycleOwner(), new Observer<DiseaseData>() {
-            @Override
-            public void onChanged(DiseaseData highestProbDisease) {
-                disease = highestProbDisease.getViName();
-            }
-        });
+
         // Thiết lập OnClickListener riêng cho nút Submit để thực hiện validate
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             EditText emailEditText = dialogView.findViewById(R.id.emailEditText);
@@ -460,7 +495,26 @@ public class ViewPredictFragment extends Fragment {
         negativeButton.setPadding(10, 10, 10, 10);
         negativeButton.setTextSize(14);
     }
+    public void showImageFullScreen(View view) {
+        assert getActivity() != null;
+        Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setContentView(R.layout.dialog_fullscreen_image);
 
+        ImageView fullScreenImageView = dialog.findViewById(R.id.fullScreenImageView);
+        ImageView originalImageView = (ImageView) view;
+
+        // Lấy drawable từ ImageView ban đầu và gán vào ImageView trong dialog
+        fullScreenImageView.setImageDrawable(originalImageView.getDrawable());
+
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss(); // Đóng Dialog khi nhấn vào nút Cancel
+            }
+        });
+        dialog.show();
+    }
     private void loadFeedbackOptions() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String url = urlBackend + "/api/get-data-feedback";
@@ -474,6 +528,7 @@ public class ViewPredictFragment extends Fragment {
                         List<String> feedbackOptions = new ArrayList<>();
                         try {
                             for (int i = 0; i < response.length(); i++) {
+                                System.out.println("check equal" + response.getString(i) + " " + disease);
                                 if (response.getString(i).equals(disease)) continue;
                                 feedbackOptions.add(response.getString(i));
                             }
@@ -525,6 +580,36 @@ public class ViewPredictFragment extends Fragment {
 
         requestQueue.add(jsonObjectRequest);
     }
+    private void deleteHistory(String id) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        String url = urlBackend + "/api/delete-history-from-android?historyId=" + id;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.DELETE,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        try {
+                            String errMessage = jsonObject.getString("message");
+                            Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
+                            requireActivity().getSupportFragmentManager().popBackStack(ViewAHistoryFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        } catch (JSONException e) {
+                            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        requestQueue.add(jsonObjectRequest);
+    }
     private TableRow createHeaderRow() {
         TableRow row = new TableRow(requireContext());
 
@@ -565,25 +650,4 @@ public class ViewPredictFragment extends Fragment {
             }
         }
     }
-    public void showImageFullScreen(View view) {
-        assert getActivity() != null;
-        Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        dialog.setContentView(R.layout.dialog_fullscreen_image);
-
-        ImageView fullScreenImageView = dialog.findViewById(R.id.fullScreenImageView);
-        ImageView originalImageView = (ImageView) view;
-
-        // Lấy drawable từ ImageView ban đầu và gán vào ImageView trong dialog
-        fullScreenImageView.setImageDrawable(originalImageView.getDrawable());
-
-        Button btnCancel = dialog.findViewById(R.id.btnCancel);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss(); // Đóng Dialog khi nhấn vào nút Cancel
-            }
-        });
-        dialog.show();
-    }
 }
-
