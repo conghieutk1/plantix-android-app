@@ -4,35 +4,30 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
-import java.util.List;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link UserFragment#newInstance} factory method to
+ * Use the {@link SignupFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserFragment extends Fragment {
+public class SignupFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static final String TAG = SignupFragment.class.getName();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public UserFragment() {
+    public SignupFragment() {
         // Required empty public constructor
     }
 
@@ -42,14 +37,11 @@ public class UserFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment UserFragment.
+     * @return A new instance of fragment SignupFragment.
      */
     // TODO: Rename and change types and number of parameters
-
-    public static final String TAG = UserFragment.class.getName();
-    private PredictionViewModel viewModel;
-    public static UserFragment newInstance(String param1, String param2) {
-        UserFragment fragment = new UserFragment();
+    public static SignupFragment newInstance(String param1, String param2) {
+        SignupFragment fragment = new SignupFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -64,28 +56,14 @@ public class UserFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        viewModel = new ViewModelProvider(requireActivity()).get(PredictionViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user, container, false);
-        // Inflate the layout for this fragment
-        Button btnLogin = view.findViewById(R.id.buttonLogin);
-        Button btnHomePage = view.findViewById(R.id.home_button);
-        btnHomePage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, HomeFragment.class, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack(HomeFragment.TAG) // Name can be null
-                        .commit();
-            }
-        });
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        View view = inflater.inflate(R.layout.fragment_signup, container, false);
+        ImageButton returnAuthentication = view.findViewById(R.id.returnAuthentication);
+        returnAuthentication.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Chuyển đổi fragment
@@ -97,24 +75,21 @@ public class UserFragment extends Fragment {
                         .commit();
             }
         });
-        // Button open setting page
-        ImageButton btnSettingPage = view.findViewById(R.id.settings_button);
-        btnSettingPage.setOnClickListener(new View.OnClickListener() {
+
+        TextView buttonGotoLogin = view.findViewById(R.id.buttonGotoLogin);
+        buttonGotoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(getActivity(), "Cài đặt", Toast.LENGTH_LONG).show();
+                // Chuyển đổi fragment
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, SettingFragment.class, null)
+                        .replace(R.id.fragmentContainerView, LoginFragment.class, null)
                         .setReorderingAllowed(true)
-                        .addToBackStack(SettingFragment.TAG) // Name can be null
+                        .addToBackStack(LoginFragment.TAG) // Name can be null
                         .commit();
             }
         });
-
-
-
-
+        // Inflate the layout for this fragment
         return view;
     }
 }

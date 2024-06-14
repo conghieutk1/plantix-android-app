@@ -483,11 +483,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Trang chủ"
-            android:textStyle="normal"
-            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textColor="@color/color_button1"
             android:background="@drawable/border_button_nav"
             app:backgroundTint="@null"
-            android:drawableBottom="@drawable/dashboard_fill0_wght400_grad0_opsz24"/>
+            android:drawableBottom="@drawable/active_dashboard_fill0_wght400_grad0_opsz24"/>
         <Button
             android:id="@+id/user_button"
             android:layout_width="0dp"

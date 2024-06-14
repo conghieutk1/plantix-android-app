@@ -1,5 +1,7 @@
 package com.plantix;
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -7,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,6 +26,7 @@ import java.util.List;
 
 
 public class HistoryViewModel extends AndroidViewModel {
+    private SharedPreferences sharedPreferences;
     private MutableLiveData<String> selectedHistoryID = new MutableLiveData<>();
     private MutableLiveData<List<Prediction>> predictionsSelectedHistory = new MutableLiveData<>();
     private MutableLiveData<DiseaseData> highestProbDiseaseSelectedHistory= new MutableLiveData<>();
@@ -35,9 +39,9 @@ public class HistoryViewModel extends AndroidViewModel {
     public HistoryViewModel(@NonNull Application application) {
         super(application);
         requestQueue = Volley.newRequestQueue(application);
+        sharedPreferences = application.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
     }
     public void setSelectedHistoryID(String id) {
-        Log.d("SharedViewModel", "Setting historyId: " + id);
         selectedHistoryID.setValue(id);
     }
     public LiveData<String> getSelectedHistoryID() {
@@ -147,10 +151,15 @@ public class HistoryViewModel extends AndroidViewModel {
                     }
                 });
 
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);
     }
     public void fetchHistories(String urlBackend) {
-        String apiGetHistory = urlBackend + "/api/get-history-by-userId?userId=4";
+        int userId = sharedPreferences.getInt("userId", 1);
+        String apiGetHistory = urlBackend + "/api/get-history-by-userId?userId=" + userId;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, apiGetHistory, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -173,13 +182,17 @@ public class HistoryViewModel extends AndroidViewModel {
                         error.printStackTrace();
                     }
                 });
-
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);
+
     }
 
     public void fetchAllHistories(String urlBackend) {
-
-        String apiGetHistory = urlBackend + "/api/get-all-histories-by-userId?userId=4";
+        int userId = sharedPreferences.getInt("userId", 1);
+        String apiGetHistory = urlBackend + "/api/get-all-histories-by-userId?userId=" + userId;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, apiGetHistory, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -203,6 +216,10 @@ public class HistoryViewModel extends AndroidViewModel {
                     }
                 });
 
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);
     }
 }

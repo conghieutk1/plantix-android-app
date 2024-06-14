@@ -17,7 +17,8 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
-        buildConfigField("String", "URL_SERVER_BACKEND", "\"https://e4aa-117-4-244-234.ngrok-free.app\"")
+//        buildConfigField("String", "URL_SERVER_BACKEND", "\"https://backend-nodejs-android.onrender.com\"")
+        buildConfigField("String", "URL_SERVER_BACKEND", "\"https://6541-117-4-244-234.ngrok-free.app\"")
     }
 
     buildTypes {
@@ -80,5 +81,8 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.core:core:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.android.support:cardview-v7:26.1.0")
+    implementation("com.android.support:design:26.1.0")
 //    implementation("com.android.support:design:28.0.0")
 }

@@ -1,0 +1,21 @@
+<!-- wave_curve_shape.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@android:color/white" /> <!-- Màu nền -->
+    <corners android:radius="32dp" /> <!-- Bán kính cong cho các góc -->
+
+    <!-- Gradient cho hiệu ứng lượn sóng -->
+    <gradient
+        android:type="linear"
+        android:angle="0"
+        android:startColor="#FFFFFF"
+    android:centerColor="#E0E0E0"
+    android:endColor="#FFFFFF" /> <!-- Màu sáng -->
+
+    <!-- Thêm padding để lượn sóng -->
+    <padding
+        android:left="8dp"
+        android:right="8dp"
+        android:top="16dp"
+        android:bottom="16dp" />
+</shape>

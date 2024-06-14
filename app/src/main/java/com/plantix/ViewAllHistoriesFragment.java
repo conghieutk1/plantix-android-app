@@ -111,8 +111,8 @@ public class ViewAllHistoriesFragment extends Fragment {
             @Override
             public void onChanged(List<JSONObject> histories) {
                 // Clear any existing components first
-                allHistoriesContainer.removeAllViews();
                 if (histories != null && !histories.isEmpty()) {
+                    allHistoriesContainer.removeAllViews();
                     loading.setVisibility(View.GONE);
                     for (int i = 0; i < histories.size(); i++) {
                         try {
@@ -122,6 +122,7 @@ public class ViewAllHistoriesFragment extends Fragment {
                             String dateTime = history.getString("DateTime");
                             String linkImage = history.getString("linkImage");
                             String diseaseName = history.getString("diseaseName");
+//                            System.out.println(historyId + " " + dateTime + " " + linkImage + " " + diseaseName);
                             // Inflate new component layout
                             LayoutInflater inflater = LayoutInflater.from(getContext());
                             View component = inflater.inflate(R.layout.history_component, allHistoriesContainer, false);
@@ -153,7 +154,6 @@ public class ViewAllHistoriesFragment extends Fragment {
                                             .setReorderingAllowed(true)
                                             .addToBackStack(ViewAHistoryFragment.TAG)
                                             .commit();
-                                    System.out.println("goto ViewAllHistoriesFragment = " + historyId);
 
 
                                 }
@@ -166,7 +166,6 @@ public class ViewAllHistoriesFragment extends Fragment {
                         }
                     }
                 }
-
 
             }
         });

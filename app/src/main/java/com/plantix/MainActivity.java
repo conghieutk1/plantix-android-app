@@ -68,6 +68,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.content.SharedPreferences;
+import android.content.Context;
 
 public class MainActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> activityResultLauncher;
@@ -85,6 +87,26 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.layout);
         applyWindowInsets(findViewById(R.id.main));
+
+        // IntroActivity.java hoặc một nơi thích hợp khi khởi động ứng dụng
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (!isLoggedIn) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("userId", 1);  // Lưu id cho guest
+            editor.putBoolean("isLoggedIn", false);
+            editor.apply();
+        }
+
+        // Kiểm tra trạng thái đăng nhập và điều hướng
+        if (isLoggedIn) {
+
+        } else {
+
+        }
+
+
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainerView, HomeFragment.class, null);

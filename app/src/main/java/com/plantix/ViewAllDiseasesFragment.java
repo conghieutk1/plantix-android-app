@@ -115,8 +115,9 @@ public class ViewAllDiseasesFragment extends Fragment {
             @Override
             public void onChanged(List<JSONObject> histories) {
                 // Clear any existing components first
-                allDiseasesContainer.removeAllViews();
+
                 if (histories != null && !histories.isEmpty()) {
+                    allDiseasesContainer.removeAllViews();
                     loading.setVisibility(View.GONE);
                     for (int i = 0; i < histories.size(); i++) {
                         try {

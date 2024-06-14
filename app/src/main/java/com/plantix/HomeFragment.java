@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -110,6 +111,7 @@ public class HomeFragment extends Fragment {
     private ImageButton btnSettingPage;
     private ImageView imgCapture, imageViewHistory1, imageViewHistory2;
     private TextView textDateTime1, textDateTime2, loading, textSelectedImage, textDiseaseName1, textDiseaseName2;
+    private SharedPreferences sharedPreferences;
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -128,7 +130,7 @@ public class HomeFragment extends Fragment {
         }
         viewModel = new ViewModelProvider(requireActivity()).get(PredictionViewModel.class);
         historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
-
+        sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -341,7 +343,8 @@ public class HomeFragment extends Fragment {
 
                 try {
                     jsonObject.put("base64FromAndroid", base64String);
-                    jsonObject.put("userId", "4");
+                    int userId = sharedPreferences.getInt("userId", 1);
+                    jsonObject.put("userId", userId);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -548,7 +551,6 @@ public class HomeFragment extends Fragment {
                                     .setReorderingAllowed(true)
                                     .addToBackStack(ViewAHistoryFragment.TAG)
                                     .commit();
-                            System.out.println("goto ViewAllHistoriesFragment = " + finalHistoryId1);
                         }
                     });
                     componentHistory2.setOnClickListener(new View.OnClickListener() {
@@ -564,7 +566,6 @@ public class HomeFragment extends Fragment {
                                     .setReorderingAllowed(true)
                                     .addToBackStack(ViewAHistoryFragment.TAG)
                                     .commit();
-                            System.out.println("goto ViewAllHistoriesFragment = " + finalHistoryId2);
                         }
                     });
                 }
