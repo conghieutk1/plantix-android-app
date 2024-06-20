@@ -73,8 +73,6 @@ import android.content.Context;
 
 public class MainActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> activityResultLauncher;
-    private ImageView imgCapture;
-    private static final int Image_Capture_Code = 1;
     private PredictionViewModel viewModel;
     @Override
     protected void attachBaseContext(Context base) {
@@ -90,29 +88,26 @@ public class MainActivity extends AppCompatActivity {
 
         // IntroActivity.java hoặc một nơi thích hợp khi khởi động ứng dụng
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        String timeExpire = sharedPreferences.getString("timeExpire", "0");
+        try {
+            long expireTimeMillis = Long.parseLong(timeExpire);
+            if (System.currentTimeMillis() > expireTimeMillis) {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragmentContainerView, AuthenticationFragment.class, null);
+                fragmentTransaction.commit();
+            } else {
 
-        if (!isLoggedIn) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("userId", 1);  // Lưu id cho guest
-            editor.putBoolean("isLoggedIn", false);
-            editor.apply();
-        }
-
-        // Kiểm tra trạng thái đăng nhập và điều hướng
-        if (isLoggedIn) {
-
-        } else {
-
-        }
-
-
-
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerView, HomeFragment.class, null);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragmentContainerView, HomeFragment.class, null);
 //        fragmentTransaction.add(R.id.main, new HomeFragment());
-        fragmentTransaction.commit();
+                fragmentTransaction.commit();
 
+
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            // Handle the exception, maybe log the error or set a default value
+        }
         viewModel = new ViewModelProvider(this).get(PredictionViewModel.class);
     }
 

@@ -69,6 +69,7 @@ public class AuthenticationFragment extends Fragment {
         Button loginButton = view.findViewById(R.id.buttonGotoLogin);
         Button signupButton = view.findViewById(R.id.buttonGotoSignup);
         ImageButton returnUser = view.findViewById(R.id.returnUser);
+        returnUser.setVisibility(View.GONE);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

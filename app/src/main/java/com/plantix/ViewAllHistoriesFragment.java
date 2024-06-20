@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -31,7 +32,7 @@ import java.util.List;
  * Use the {@link ViewAllHistoriesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewAllHistoriesFragment extends Fragment {
+public class ViewAllHistoriesFragment extends BaseFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,6 +43,7 @@ public class ViewAllHistoriesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private HistoryViewModel historyViewModel;
+    private ProgressBar progressBar;
     public static final String urlBackend = BuildConfig.URL_SERVER_BACKEND;
     private LinearLayout allHistoriesContainer;
     private ImageButton btnReturnHome;
@@ -87,16 +89,7 @@ public class ViewAllHistoriesFragment extends Fragment {
         allHistoriesContainer = view.findViewById(R.id.all_histories_container);
         loading = view.findViewById(R.id.loading);
         loading.setVisibility(View.VISIBLE);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                loading.setVisibility(View.GONE);
-//                noDataText.setVisibility(View.VISIBLE);
-                loading.setText("Không có dữ liệu");
-            }
-        }, 3000); // 10 giây = 10000 milliseconds
-
+        progressBar = view.findViewById(R.id.progressBar);
         btnReturnHome = view.findViewById(R.id.return_button);
 
         return view;
@@ -111,6 +104,7 @@ public class ViewAllHistoriesFragment extends Fragment {
             @Override
             public void onChanged(List<JSONObject> histories) {
                 // Clear any existing components first
+                progressBar.setVisibility(View.GONE);
                 if (histories != null && !histories.isEmpty()) {
                     allHistoriesContainer.removeAllViews();
                     loading.setVisibility(View.GONE);
@@ -166,20 +160,20 @@ public class ViewAllHistoriesFragment extends Fragment {
                         }
                     }
                 }
-
+                loading.setText("Không có dữ liệu");
             }
         });
 
         btnReturnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                        requireActivity().getSupportFragmentManager().popBackStack(ViewPredictFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, HomeFragment.class, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack(HomeFragment.TAG) // Name can be null
-                        .commit();
+                        requireActivity().getSupportFragmentManager().popBackStack(ViewAllHistoriesFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+//                fragmentManager.beginTransaction()
+//                        .replace(R.id.fragmentContainerView, HomeFragment.class, null)
+//                        .setReorderingAllowed(true)
+//                        .addToBackStack(HomeFragment.TAG) // Name can be null
+//                        .commit();
             }
         });
     }

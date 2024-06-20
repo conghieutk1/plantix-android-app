@@ -18,7 +18,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
 //        buildConfigField("String", "URL_SERVER_BACKEND", "\"https://backend-nodejs-android.onrender.com\"")
-        buildConfigField("String", "URL_SERVER_BACKEND", "\"https://6541-117-4-244-234.ngrok-free.app\"")
+        buildConfigField("String", "URL_SERVER_BACKEND", "\"https://9883-14-162-225-6.ngrok-free.app\"")
     }
 
     buildTypes {

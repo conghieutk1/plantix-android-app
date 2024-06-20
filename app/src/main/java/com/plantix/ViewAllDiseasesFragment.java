@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -30,7 +31,7 @@ import java.util.List;
  * Use the {@link ViewAllDiseasesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewAllDiseasesFragment extends Fragment {
+public class ViewAllDiseasesFragment extends BaseFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +60,7 @@ public class ViewAllDiseasesFragment extends Fragment {
     public static final String urlBackend = BuildConfig.URL_SERVER_BACKEND;
     private LinearLayout allDiseasesContainer;
     private ImageButton btnReturnHome;
+    private ProgressBar progressBar;
     private TextView loading;
     public static ViewAllDiseasesFragment newInstance(String param1, String param2) {
         ViewAllDiseasesFragment fragment = new ViewAllDiseasesFragment();
@@ -88,18 +90,9 @@ public class ViewAllDiseasesFragment extends Fragment {
         allDiseasesContainer = view.findViewById(R.id.all_diseases_container);
         loading = view.findViewById(R.id.loading);
         loading.setVisibility(View.VISIBLE);
+        progressBar = view.findViewById(R.id.progressBar);
 
         btnReturnHome = view.findViewById(R.id.return_button);
-
-        // Sử dụng Handler để trì hoãn việc thay đổi văn bản sau 10 giây
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                loading.setVisibility(View.GONE);
-//                noDataText.setVisibility(View.VISIBLE);
-                loading.setText("Không có dữ liệu");
-            }
-        }, 3000); // 10 giây = 10000 milliseconds
 
         return view;
     }
@@ -115,7 +108,7 @@ public class ViewAllDiseasesFragment extends Fragment {
             @Override
             public void onChanged(List<JSONObject> histories) {
                 // Clear any existing components first
-
+                progressBar.setVisibility(View.GONE);
                 if (histories != null && !histories.isEmpty()) {
                     allDiseasesContainer.removeAllViews();
                     loading.setVisibility(View.GONE);

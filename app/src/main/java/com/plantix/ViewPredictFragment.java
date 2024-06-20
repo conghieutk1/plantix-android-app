@@ -28,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -61,7 +62,7 @@ import io.noties.markwon.Markwon;
  * Use the {@link ViewPredictFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewPredictFragment extends Fragment {
+public class ViewPredictFragment extends BaseFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,6 +94,7 @@ public class ViewPredictFragment extends Fragment {
     private Button buttonViewMore, buttonGotoHome;
     private ImageButton buttonFeedback;
     private Spinner feedbackSpinner;
+    private RelativeLayout loadingLayout;
     private TextView textFeedbackSpinner;
     private String urlImageForFeedback;
     private Handler handler;
@@ -140,6 +142,7 @@ public class ViewPredictFragment extends Fragment {
         precautionContainer.setVisibility(View.GONE);
         ImageButton btnReturnHome = view.findViewById(R.id.return_button);
         buttonFeedback = view.findViewById(R.id.buttonFeedback);
+        loadingLayout = view.findViewById(R.id.loadingLayout);
 
         btnReturnHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -463,6 +466,7 @@ public class ViewPredictFragment extends Fragment {
     }
 
     private void loadFeedbackOptions() {
+        loadingLayout.setVisibility(View.VISIBLE);
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String url = urlBackend + "/api/get-data-feedback";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -485,12 +489,14 @@ public class ViewPredictFragment extends Fragment {
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, feedbackOptions);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         feedbackSpinner.setAdapter(adapter);
+                        loadingLayout.setVisibility(View.GONE);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getContext(), "Lỗi lấy danh sách bệnh", Toast.LENGTH_SHORT).show();
+                        loadingLayout.setVisibility(View.GONE);
                     }
                 }
         );
@@ -498,6 +504,7 @@ public class ViewPredictFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
     private void sendFeedback(JSONObject jsonObject) {
+        loadingLayout.setVisibility(View.VISIBLE);
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String url = urlBackend + "/api/send-a-feedback";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -510,8 +517,9 @@ public class ViewPredictFragment extends Fragment {
                         try {
                             String errMessage = jsonObject.getString("errMessage");
                             Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
+                            loadingLayout.setVisibility(View.GONE);
                         } catch (JSONException e) {
-
+                            loadingLayout.setVisibility(View.GONE);
                             throw new RuntimeException(e);
                         }
                     }
@@ -520,6 +528,8 @@ public class ViewPredictFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getContext(), "Có lỗi khi gửi phản hồi", Toast.LENGTH_SHORT).show();
+
+
                     }
                 }
         );

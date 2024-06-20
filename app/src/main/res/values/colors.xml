@@ -19,6 +19,6 @@
     <color name="main_color6">#40A578</color>
     <color name="main_color7">#9DDE8B</color>
     <color name="main_color8">#33FFFFFF</color>
-
-
+    <color name="err_message">#cc0000</color>
+    <color name="semi_transparent">#80000000</color>
 </resources>

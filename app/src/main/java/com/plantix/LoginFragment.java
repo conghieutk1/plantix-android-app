@@ -1,5 +1,7 @@
 package com.plantix;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +45,8 @@ public class LoginFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     public static final String TAG = LoginFragment.class.getName();
+    private SharedPreferences sharedPreferences;
+    private RelativeLayout loadingLayout;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -77,6 +82,20 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_login, container, false);
+        sharedPreferences = requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String savedAccount = sharedPreferences.getString("account", "");
+        String savedPassword = sharedPreferences.getString("password", "");
+        loadingLayout = view.findViewById(R.id.loadingLayout);
+
+        EditText accountEditText = view.findViewById(R.id.accountEditText);
+        EditText passwordEditText = view.findViewById(R.id.passwordEditText);
+        CheckBox checkBoxRememberMe = view.findViewById(R.id.checkBoxRememberMe);
+        if (!savedAccount.isEmpty() || !savedPassword.isEmpty()) {
+            accountEditText.setText(savedAccount);
+            passwordEditText.setText(savedPassword);
+            checkBoxRememberMe.setChecked(true);
+        }
+
         ImageButton returnAuthentication = view.findViewById(R.id.returnAuthentication);
         returnAuthentication.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,21 +123,23 @@ public class LoginFragment extends Fragment {
                         .commit();
             }
         });
+        TextView errLogin = view.findViewById(R.id.errLogin);
+        errLogin.setVisibility(View.GONE);
 
         Button buttonLogin = view.findViewById(R.id.buttonLogin);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingLayout.setVisibility(View.VISIBLE);
                 RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
                 String url = urlBackend + "/api/login";
-
-                EditText accountEditText = view.findViewById(R.id.accountEditText);
-                EditText passwordEditText = view.findViewById(R.id.passwordEditText);
-                CheckBox checkBoxRememberMe = view.findViewById(R.id.checkBoxRememberMe);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 String account = accountEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
                 boolean rememberMe = checkBoxRememberMe.isChecked();
+
+
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("account", account);
@@ -126,6 +147,7 @@ public class LoginFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.POST,
                         url,
@@ -134,8 +156,39 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onResponse(JSONObject jsonObject) {
                                 try {
+                                    String errCode = jsonObject.getString("errCode");
                                     String errMessage = jsonObject.getString("errMessage");
-                                    Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
+
+                                    if (errCode.equals("0")) {
+                                        // Đăng nhập thành công
+                                        errLogin.setVisibility(View.GONE);
+                                        int id = jsonObject.getInt("id");
+                                        String fullName = jsonObject.getString("fullName");
+                                        String timeExpire = jsonObject.getString("timeExpire");
+                                        editor.putInt("userId", id);
+                                        editor.putString("fullName", fullName);
+                                        editor.putString("timeExpire", timeExpire);
+                                        if (rememberMe) {
+                                            editor.putString("account", account);
+                                            editor.putString("password", password);
+                                            editor.apply();
+                                        } else {
+                                            editor.putString("account", "");
+                                            editor.putString("password", "");
+                                            editor.apply();
+                                        }
+                                        Toast.makeText(getContext(), "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                                        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                                        fragmentManager.beginTransaction()
+                                                .replace(R.id.fragmentContainerView, HomeFragment.class, null)
+                                                .setReorderingAllowed(true)
+                                                .addToBackStack(null) // Name can be null
+                                                .commit();
+                                    } else {
+                                        errLogin.setVisibility(View.VISIBLE);
+                                        errLogin.setText(errMessage);
+                                        loadingLayout.setVisibility(View.GONE);
+                                    }
                                 } catch (JSONException e) {
 
                                     throw new RuntimeException(e);
@@ -146,6 +199,7 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(getContext(), "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                                loadingLayout.setVisibility(View.GONE);
                             }
                         }
                 );

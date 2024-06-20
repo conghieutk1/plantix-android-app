@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -58,7 +59,7 @@ import io.noties.markwon.Markwon;
  * Use the {@link ViewAHistoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewAHistoryFragment extends Fragment {
+public class ViewAHistoryFragment extends BaseFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -75,6 +76,7 @@ public class ViewAHistoryFragment extends Fragment {
     private LinearLayout reasonContainer, treatmentContainer, precautionContainer;
     private Button buttonViewMore, buttonGotoHome;
     private ImageButton buttonFeedback, buttonRemoveHistory;
+    private RelativeLayout loadingLayout;
     private Spinner feedbackSpinner;
     private TextView textFeedbackSpinner;
     private String disease = "";
@@ -142,7 +144,7 @@ public class ViewAHistoryFragment extends Fragment {
         precautionContainer.setVisibility(View.GONE);
         ImageButton btnReturnHome = view.findViewById(R.id.return_button);
         buttonFeedback = view.findViewById(R.id.buttonFeedback);
-
+        loadingLayout = view.findViewById(R.id.loadingLayout);
         btnReturnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,7 +200,12 @@ public class ViewAHistoryFragment extends Fragment {
         buttonGotoHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, HomeFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null) // Name can be null
+                        .commit();
             }
         });
         buttonFeedback.setOnClickListener(new View.OnClickListener() {
@@ -340,8 +347,6 @@ public class ViewAHistoryFragment extends Fragment {
                     TextView textView = view.findViewById(R.id.textDate);
                     textView.setText("Thời gian: " + s);
                 }
-
-
             }
         });
 
@@ -517,6 +522,7 @@ public class ViewAHistoryFragment extends Fragment {
         dialog.show();
     }
     private void loadFeedbackOptions() {
+        loadingLayout.setVisibility(View.VISIBLE);
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String url = urlBackend + "/api/get-data-feedback";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -529,7 +535,6 @@ public class ViewAHistoryFragment extends Fragment {
                         List<String> feedbackOptions = new ArrayList<>();
                         try {
                             for (int i = 0; i < response.length(); i++) {
-                                System.out.println("check equal" + response.getString(i) + " " + disease);
                                 if (response.getString(i).equals(disease)) continue;
                                 feedbackOptions.add(response.getString(i));
                             }
@@ -540,12 +545,14 @@ public class ViewAHistoryFragment extends Fragment {
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, feedbackOptions);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         feedbackSpinner.setAdapter(adapter);
+                        loadingLayout.setVisibility(View.GONE);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getContext(), "Lỗi lấy danh sách bệnh", Toast.LENGTH_SHORT).show();
+                        loadingLayout.setVisibility(View.GONE);
                     }
                 }
         );
@@ -553,6 +560,7 @@ public class ViewAHistoryFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
     private void sendFeedback(JSONObject jsonObject) {
+        loadingLayout.setVisibility(View.VISIBLE);
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String url = urlBackend + "/api/send-a-feedback";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -565,8 +573,9 @@ public class ViewAHistoryFragment extends Fragment {
                         try {
                             String errMessage = jsonObject.getString("errMessage");
                             Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
+                            loadingLayout.setVisibility(View.GONE);
                         } catch (JSONException e) {
-
+                            loadingLayout.setVisibility(View.GONE);
                             throw new RuntimeException(e);
                         }
                     }
@@ -575,6 +584,7 @@ public class ViewAHistoryFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getContext(), "Có lỗi khi gửi phản hồi", Toast.LENGTH_SHORT).show();
+                        loadingLayout.setVisibility(View.GONE);
                     }
                 }
         );
@@ -585,6 +595,7 @@ public class ViewAHistoryFragment extends Fragment {
         requestQueue.add(jsonObjectRequest);
     }
     private void deleteHistory(String id) {
+        loadingLayout.setVisibility(View.VISIBLE);
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String url = urlBackend + "/api/delete-history-from-android?historyId=" + id;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -600,6 +611,7 @@ public class ViewAHistoryFragment extends Fragment {
                             requireActivity().getSupportFragmentManager().popBackStack(ViewAHistoryFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         } catch (JSONException e) {
                             Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                            loadingLayout.setVisibility(View.GONE);
                             throw new RuntimeException(e);
                         }
                     }
@@ -608,6 +620,7 @@ public class ViewAHistoryFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                        loadingLayout.setVisibility(View.GONE);
                     }
                 }
         );

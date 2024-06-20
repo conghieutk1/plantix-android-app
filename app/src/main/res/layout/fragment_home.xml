@@ -51,7 +51,82 @@
             android:background="@color/white"
             android:orientation="vertical"
             android:padding="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/textPlace"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:text="Địa điểm"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:maxWidth="0dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <TextView
+                        android:id="@+id/textToday"
+                        android:layout_width="match_parent"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:text="Thời gian"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <TextView
+                        android:id="@+id/textDescriptWeather"
+                        android:layout_width="match_parent"
+                        android:textSize="13sp"
+                        android:textColor="@color/black"
+                        android:text="Mô tả"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/textTemp"
+                        android:layout_width="70dp"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"
+                        android:text="0\u00B0C"
+                        android:textColor="@color/color_button1"
+                        android:textSize="24sp"
+                        android:maxLines="1"
+                        android:layout_height="wrap_content">
+                    </TextView>
 
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imageWeather"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/sunny_24dp_fill0_wght400_grad0_opsz24"
+                    />
+                <ProgressBar
+                    android:id="@+id/progressBarWeather"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/color_button1"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"/>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -332,9 +407,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible"/>
                 <TextView
                     android:id="@+id/loading"
                     android:layout_width="match_parent"
+                    android:gravity="center"
                     android:textSize="14sp"
                     android:textColor="@color/black"
                     android:text="Đang tải dữ liệu..."
@@ -501,5 +585,20 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/loadingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/semi_transparent"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center">
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/color_button1"
+            style="?android:attr/progressBarStyleLarge"/>
+    </RelativeLayout>
 </FrameLayout>

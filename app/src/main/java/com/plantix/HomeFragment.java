@@ -1,5 +1,6 @@
 package com.plantix;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -30,6 +32,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +74,7 @@ import okhttp3.RequestBody;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -107,11 +111,16 @@ public class HomeFragment extends Fragment {
     private PredictionViewModel viewModel;
     private HistoryViewModel historyViewModel;
     private LinearLayout mainHistoryLayout, componentHistory1, componentHistory2, componentViewSelectedImage;
+    private ProgressBar progressBar, progressBarWeather;
+    private RelativeLayout loadingLayout;
     private Button btnCapture, btnSelectImage, buttonPrediction, btnUserPage, buttonViewAllHistories, buttonViewAllDiseases;
     private ImageButton btnSettingPage;
     private ImageView imgCapture, imageViewHistory1, imageViewHistory2;
     private TextView textDateTime1, textDateTime2, loading, textSelectedImage, textDiseaseName1, textDiseaseName2;
+    private TextView textToday, textPlace, textDescriptWeather, textTemp;
+    private ImageView imageWeather;
     private SharedPreferences sharedPreferences;
+    private RequestQueue requestQueue;
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -143,6 +152,17 @@ public class HomeFragment extends Fragment {
         buttonViewAllHistories = view.findViewById(R.id.buttonViewAllHistories);
         componentViewSelectedImage = view.findViewById(R.id.componentViewSelectedImage);
         textSelectedImage = view.findViewById(R.id.textSelectedImage);
+        loadingLayout = view.findViewById(R.id.loadingLayout);
+
+        // weather
+//        textToday = view.findViewById(R.id.textToday);
+//        textPlace = view.findViewById(R.id.textPlace);
+//        textDescriptWeather = view.findViewById(R.id.textDescriptWeather);
+//        textTemp = view.findViewById(R.id.textTemp);
+        imageWeather = view.findViewById(R.id.imageWeather);
+        progressBarWeather = view.findViewById(R.id.progressBarWeather);
+        imageWeather.setVisibility(View.GONE);
+        progressBarWeather.setVisibility(View.VISIBLE);
 
         buttonViewAllDiseases = view.findViewById(R.id.buttonViewAllDiseases);
         imgCapture = (ImageView) view.findViewById(R.id.imageView1);
@@ -212,16 +232,16 @@ public class HomeFragment extends Fragment {
         textDiseaseName2 = view.findViewById(R.id.textDiseaseName2);
 
         loading = view.findViewById(R.id.loading);
-
+        progressBar = view.findViewById(R.id.progressBar);
         loading.setVisibility(View.VISIBLE);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                loading.setVisibility(View.GONE);
-//                noDataText.setVisibility(View.VISIBLE);
-                loading.setText("Không có dữ liệu");
-            }
-        }, 10000); // 10 giây = 10000 milliseconds
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+////                loading.setVisibility(View.GONE);
+////                noDataText.setVisibility(View.VISIBLE);
+//                loading.setText("Không có dữ liệu");
+//            }
+//        }, 10000); // 10 giây = 10000 milliseconds
         componentHistory1.setVisibility(View.GONE);
         componentHistory2.setVisibility(View.GONE);
 
@@ -238,6 +258,8 @@ public class HomeFragment extends Fragment {
         textSelectedImage.setVisibility(View.GONE);
         buttonPrediction.setVisibility(View.GONE);
 
+        // fetch weather
+        fetchDataWeather(view);
         btnUserPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -323,10 +345,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         buttonPrediction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingLayout.setVisibility(View.VISIBLE);
                 // Vô hiệu hóa nút để tránh nhấp nhiều lần
                 buttonPrediction.setEnabled(false);
 
@@ -429,6 +451,7 @@ public class HomeFragment extends Fragment {
 
                                 // Kích hoạt lại nút
                                 buttonPrediction.setEnabled(true);
+                                loadingLayout.setVisibility(View.GONE);
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -437,6 +460,7 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getActivity(), "Có lỗi xảy ra, vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                         // Kích hoạt lại nút ngay cả khi có lỗi
                         buttonPrediction.setEnabled(true);
+                        loadingLayout.setVisibility(View.GONE);
                     }
                 });
                 // Unable retry api
@@ -459,6 +483,7 @@ public class HomeFragment extends Fragment {
                     lastRequestTimeMs = currentTimeMs;
                     // Kích hoạt lại nút
                     buttonPrediction.setEnabled(true);
+                    loadingLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -466,6 +491,7 @@ public class HomeFragment extends Fragment {
         historyViewModel.getHistories().observe(getViewLifecycleOwner(), new Observer<List<JSONObject>>() {
             @Override
             public void onChanged(List<JSONObject> histories) {
+                progressBar.setVisibility(View.GONE);
                 if (histories != null && !histories.isEmpty()) {
                     loading.setVisibility(View.GONE);
                     String historyId1 = "";
@@ -645,7 +671,7 @@ public class HomeFragment extends Fragment {
 
         requestQueue.add(request);
     }
-    public Bitmap getBitmapFromUri(Uri uri) {
+     Bitmap getBitmapFromUri(Uri uri) {
         try {
             // Sử dụng Context của Fragment để truy cập ContentResolver
             Context context = requireContext(); // hoặc getContext() tùy theo trường hợp
@@ -661,5 +687,70 @@ public class HomeFragment extends Fragment {
         return null;
     }
 
+    void fetchDataWeather(View view) {
+        String apiGetWeather = urlBackend + "/api/infomation-weather-today";
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, apiGetWeather, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
 
+                        try {
+                            String dateTime = response.getString("dateTime");
+                            String tempC = response.getString("curTempC");
+                            String city = response.getString("city");
+                            String description = response.getString("description").trim();
+                            int code = response.getInt("codeWeather");
+
+                            textToday = view.findViewById(R.id.textToday);
+                            textToday.setText(dateTime);
+
+                            textPlace = view.findViewById(R.id.textPlace);
+                            textPlace.setText(city);
+
+                            textDescriptWeather = view.findViewById(R.id.textDescriptWeather);
+                            textDescriptWeather.setText(description);
+
+                            textTemp = view.findViewById(R.id.textTemp);
+                            textTemp.setText(tempC + "°C");
+
+                            String iconFileName = WeatherIconMapper.getDescription(code);
+                            imageWeather = view.findViewById(R.id.imageWeather);
+                            loadImageFromAssets(imageWeather, "weather/" + iconFileName);
+//                            Picasso.get().load(icon).error(R.drawable.sunny_24dp_fill0_wght400_grad0_opsz24).into(imageWeather);
+                            imageWeather.setVisibility(View.VISIBLE);
+
+                            progressBarWeather = view.findViewById(R.id.progressBarWeather);
+                            progressBarWeather.setVisibility(View.GONE);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+    private void loadImageFromAssets(ImageView imageView, String filePath) {
+        View view = getView();
+        if (view != null) {
+            try {
+                InputStream inputStream = view.getContext().getAssets().open(filePath);
+                Drawable drawable = Drawable.createFromStream(inputStream, null);
+                imageView.setImageDrawable(drawable);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
