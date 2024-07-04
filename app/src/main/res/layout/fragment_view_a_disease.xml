@@ -3,12 +3,358 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewADiseaseFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ViewPredictFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/border_nav"
+        android:padding="16dp"
+        android:layout_gravity="top"
+        android:gravity="center_vertical">
+        <ImageButton
+            android:id="@+id/return_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/arrow_back_fill0_wght400_grad0_opsz24" />
+
+        <TextView
+            android:id="@+id/titleDiseaseName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Bệnh cây"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/componentLoading"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:background="@color/background_component"
+        android:layout_marginTop="56dp"
+        android:visibility="visible"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/color_loading"
+            android:layout_centerInParent="true"
+            android:visibility="visible"/>
+        <TextView
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:text="Đang tải dữ liệu..."
+            android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/content"
+        android:background="@color/background_component"
+        android:layout_marginTop="56dp"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="@color/background_component"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingLeft="10dp"
+                android:paddingBottom="5dp"
+                android:text="Hình ảnh" />
+            <androidx.cardview.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/bottom_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="15dp">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"/>
+            </androidx.cardview.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:background="@drawable/background_component1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewDiseaseName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="5dp"
+                    android:text="Tên bệnh" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"
+                        app:srcCompat="@drawable/book_4_24dp_fill0_wght400_grad0_opsz24"
+                        />
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:padding="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_weight="7"
+                        android:text="Triệu chứng" />
+                </LinearLayout>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/textViewSymtom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:paddingBottom="5dp"
+                    android:text="Không có dữ liệu" />
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/reasonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:background="@drawable/background_component1"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"
+                        app:srcCompat="@drawable/question_mark_24dp_fill0_wght400_grad0_opsz24"
+                        />
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:padding="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_weight="7"
+                        android:text="Nguyên nhân gây bệnh" />
+                </LinearLayout>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/textViewReason"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:paddingBottom="5dp"
+                    android:text="Không có dữ liệu" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"
+                        app:srcCompat="@drawable/menu_book_24dp_fill0_wght400_grad0_opsz24"
+                        />
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:padding="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_weight="7"
+                        android:text="Thêm thông tin" />
+                </LinearLayout>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/textViewMoreInformation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:paddingBottom="5dp"
+                    android:text="Không có dữ liệu" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/treatmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:background="@drawable/background_component1"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"
+                        app:srcCompat="@drawable/medical_services_24dp_fill0_wght400_grad0_opsz24"
+                        />
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:padding="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_weight="7"
+                        android:text="Phương pháp điều trị" />
+                </LinearLayout>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/textViewTreatment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:paddingBottom="5dp"
+                    android:text="Không có dữ liệu" />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/precautionContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:background="@drawable/background_component1"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"
+                        app:srcCompat="@drawable/health_and_safety_24dp_fill0_wght400_grad0_opsz24"
+                        />
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:padding="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_weight="7"
+                        android:text="Biện pháp phòng ngừa" />
+                </LinearLayout>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/textViewPrecaution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:paddingBottom="5dp"
+                    android:text="Không có dữ liệu" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/loadingLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@color/semi_transparent"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/color_button1"
+            style="?android:attr/progressBarStyleLarge"/>
+    </RelativeLayout>
 
 </FrameLayout>

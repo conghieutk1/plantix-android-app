@@ -109,12 +109,14 @@ public class ViewAllDiseasesFragment extends BaseFragment {
             public void onChanged(List<JSONObject> histories) {
                 // Clear any existing components first
                 progressBar.setVisibility(View.GONE);
+                System.out.println("111111111111");
                 if (histories != null && !histories.isEmpty()) {
                     allDiseasesContainer.removeAllViews();
                     loading.setVisibility(View.GONE);
                     for (int i = 0; i < histories.size(); i++) {
                         try {
                             JSONObject history = histories.get(i);
+                            String diseaseId = history.getString("id");
                             String enName = history.getString("enName");
                             String viName = history.getString("viName");
                             String linkImage = history.getString("imageData");
@@ -137,12 +139,29 @@ public class ViewAllDiseasesFragment extends BaseFragment {
 //                                Picasso.get().load("https://endlessicons.com/wp-content/uploads/2012/11/image-holder-icon-614x460.png").into(imageViewDisease);
                             }
 
+                            component.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Bundle bundle = new Bundle();
+                                    System.out.println("diseaseId = " + diseaseId);
+                                    bundle.putString("diseaseId", diseaseId);
+                                    ViewADiseaseFragment fragment = new ViewADiseaseFragment();
+                                    fragment.setArguments(bundle);
+                                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                                    fragmentManager.beginTransaction()
+                                            .replace(R.id.fragmentContainerView, fragment)
+                                            .setReorderingAllowed(true)
+                                            .addToBackStack(ViewADiseaseFragment.TAG)
+                                            .commit();
+                                }
+                            });
 
 
                             // Add the new component to the parent layout
                             allDiseasesContainer.addView(component);
 
                         } catch (JSONException e) {
+                            System.out.println("222222222222");
                             e.printStackTrace();
                         }
                     }

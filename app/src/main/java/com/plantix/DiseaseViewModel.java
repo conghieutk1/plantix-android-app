@@ -3,6 +3,7 @@ package com.plantix;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -40,9 +41,8 @@ public class DiseaseViewModel extends AndroidViewModel {
         return allDiseases;
     }
     public void fetchAllDiseases(String urlBackend) {
-        int userId = sharedPreferences.getInt("userId", 1);
-        String apiGetHistory = urlBackend + "/api/get-all-diseases-by-userId?userId=" + userId;
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, apiGetHistory, null,
+        String apiGetDiseases = urlBackend + "/api/get-all-diseases";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, apiGetDiseases, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

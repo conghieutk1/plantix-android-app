@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -81,6 +82,14 @@ public class ViewAHistoryFragment extends BaseFragment {
     private TextView textFeedbackSpinner;
     private String disease = "";
     private String urlImageForFeedback;
+    private boolean predictionsUpdated = false;
+    private boolean highestProbDiseaseUpdated = false;
+    private boolean urlImageSelectedDiseaseUpdated = false;
+    private boolean imageUpdated = false;
+    private LinearLayout componentLoading;
+    private ProgressBar progressBar;
+    private TextView loading;
+    private ScrollView scrollView;
     public ViewAHistoryFragment() {
         // Required empty public constructor
     }
@@ -145,6 +154,14 @@ public class ViewAHistoryFragment extends BaseFragment {
         ImageButton btnReturnHome = view.findViewById(R.id.return_button);
         buttonFeedback = view.findViewById(R.id.buttonFeedback);
         loadingLayout = view.findViewById(R.id.loadingLayout);
+//        loadingLayout.setVisibility(View.VISIBLE);
+
+        loading = view.findViewById(R.id.loading);
+        progressBar = view.findViewById(R.id.progressBar);
+        scrollView = view.findViewById(R.id.content);
+        componentLoading = view.findViewById(R.id.componentLoading);
+        componentLoading.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.GONE);
         btnReturnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +176,6 @@ public class ViewAHistoryFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        buttonFeedback.setVisibility(View.GONE);
         ImageView imageView = view.findViewById(R.id.SelectedImage);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,6 +287,8 @@ public class ViewAHistoryFragment extends BaseFragment {
                 } else {
                     // Nếu không có dữ liệu dự đoán, có thể hiển thị một thông báo hoặc làm gì đó khác
                 }
+                predictionsUpdated = true;
+                checkAllUpdatesCompleted();
             }
         });
 
@@ -323,6 +341,8 @@ public class ViewAHistoryFragment extends BaseFragment {
                     SlideshowAdapter adapter = new SlideshowAdapter(getActivity(), imageUrls);
                     viewPager.setAdapter(adapter);
                 }
+                highestProbDiseaseUpdated = true;
+                checkAllUpdatesCompleted();
             }
         });
 
@@ -331,9 +351,11 @@ public class ViewAHistoryFragment extends BaseFragment {
             public void onChanged(String s) {
                 if (s != null && !s.isEmpty()) {
                     urlImageForFeedback = s;
-                    buttonFeedback.setVisibility(View.VISIBLE);
+
 //                    imageView = view.findViewById(R.id.SelectedImage);
                     Picasso.get().load(s).into(imageView);
+                    urlImageSelectedDiseaseUpdated = true;
+                    checkAllUpdatesCompleted();
                 }
 
 
@@ -346,6 +368,8 @@ public class ViewAHistoryFragment extends BaseFragment {
                 if (s != null && !s.isEmpty()) {
                     TextView textView = view.findViewById(R.id.textDate);
                     textView.setText("Thời gian: " + s);
+                    imageUpdated = true;
+                    checkAllUpdatesCompleted();
                 }
             }
         });
@@ -500,6 +524,15 @@ public class ViewAHistoryFragment extends BaseFragment {
         negativeButton.setTextColor(Color.WHITE);
         negativeButton.setPadding(10, 10, 10, 10);
         negativeButton.setTextSize(14);
+    }
+    private void checkAllUpdatesCompleted() {
+        if (predictionsUpdated && highestProbDiseaseUpdated && urlImageSelectedDiseaseUpdated && imageUpdated) {
+//            loadingLayout.setVisibility(View.GONE);
+            componentLoading.setVisibility(View.GONE);
+            buttonRemoveHistory.setVisibility(View.VISIBLE);
+            buttonFeedback.setVisibility(View.VISIBLE);
+            scrollView.setVisibility(View.VISIBLE);
+        }
     }
     public void showImageFullScreen(View view) {
         assert getActivity() != null;

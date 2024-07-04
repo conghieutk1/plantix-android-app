@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -348,7 +349,9 @@ public class HomeFragment extends BaseFragment {
         buttonPrediction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingLayout.setVisibility(View.VISIBLE);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    loadingLayout.setVisibility(View.VISIBLE);
+                });
                 // Vô hiệu hóa nút để tránh nhấp nhiều lần
                 buttonPrediction.setEnabled(false);
 

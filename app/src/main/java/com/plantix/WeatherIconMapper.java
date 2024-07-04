@@ -61,7 +61,7 @@ public class WeatherIconMapper {
     }
 
     public static String getDescription(int weatherCode) {
-        return weatherIconMap.getOrDefault(weatherCode, "Unknown"); // Mô tả mặc định nếu không tìm thấy ánh xạ
+        return weatherIconMap.getOrDefault(weatherCode, "unknown.png"); // Mô tả mặc định nếu không tìm thấy ánh xạ
     }
 }
 
